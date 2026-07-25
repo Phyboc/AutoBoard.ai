@@ -82,5 +82,19 @@
     ],
     "startTime": "2026-07-25T20:40:02.031Z",
     "endTime": "2026-07-25T20:40:02.042Z"
+  },
+  {
+    "id": "exec-391892",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T23:33:11.901Z"
+      }
+    ],
+    "startTime": "2026-07-25T23:33:11.892Z",
+    "endTime": "2026-07-25T23:33:11.911Z"
   }
 ]

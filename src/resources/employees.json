@@ -175,5 +175,15 @@
     "status": "Onboarding",
     "provisionedAccounts": [],
     "assignedTraining": []
+  },
+  {
+    "id": "emp-1896",
+    "name": "Jane Doe",
+    "email": "janedoe@comp.com",
+    "role": "Junior Frontend Developer",
+    "startDate": "Monday",
+    "status": "Onboarding",
+    "provisionedAccounts": [],
+    "assignedTraining": []
   }
 ]

@@ -46,5 +46,13 @@
     "system": "HRIS / Internal DB",
     "status": "SUCCESS",
     "details": "Created employee Shreyas (emp-2036) with role Junior Software Developer"
+  },
+  {
+    "timestamp": "2026-07-25T23:33:11.921Z",
+    "employee": "janedoe@comp.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Jane Doe (emp-1896) with role Junior Frontend Developer"
   }
 ]

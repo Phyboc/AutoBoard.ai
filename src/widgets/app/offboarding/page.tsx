@@ -21,16 +21,34 @@ interface OffboardingData {
   status: 'Pending' | 'In Progress' | 'Completed';
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function OffboardingWidget() {
   const theme = useTheme();
-  const { getToolOutput } = useWidgetSDK();
+  const { isReady, getToolOutput } = useWidgetSDK();
   const [state, setState] = useWidgetState<{ expanded: boolean }>(() => ({
     expanded: true
   }));
 
-  const data = getToolOutput<OffboardingData>();
+  const isDark = theme === 'dark';
 
-  if (!data) {
+  if (!isReady) {
+    return (
+      <div style={{
+        padding: '24px',
+        textAlign: 'center',
+        color: isDark ? '#9ca3af' : '#4b5563',
+        fontFamily: 'system-ui, sans-serif'
+      }}>
+        <p style={{ margin: 0, fontSize: '13px' }}>Connecting to host...</p>
+      </div>
+    );
+  }
+
+  const rawData = getToolOutput<any>();
+  const data = (rawData?.data || rawData) as OffboardingData;
+
+  if (!data || !data.revokedSystems) {
     return (
       <div style={{
         padding: '24px',
@@ -43,7 +61,6 @@ export default function OffboardingWidget() {
     );
   }
 
-  const isDark = theme === 'dark';
   const dangerColor = '#ef4444';
 
   const statusColors: Record<string, string> = {
