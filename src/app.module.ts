@@ -1,6 +1,7 @@
 import { McpApp, Module, ConfigModule } from '@nitrostack/core';
-import { EmployeeLifecycleModule } from './modules/employee-lifecycle/employee-lifecycle.module.js';
-import { SystemHealthCheck } from './health/system.health.js';
+import { OnboardingModule } from './modules/onboarding/onboarding.module.js';
+import { OffboardingModule } from './modules/offboarding/offboarding.module.js';
+import { SystemModule } from './modules/system/system.module.js';
 
 /**
  * Root Application Module
@@ -23,12 +24,10 @@ import { SystemHealthCheck } from './health/system.health.js';
   description: 'Root application module',
   imports: [
     ConfigModule.forRoot(),
-    EmployeeLifecycleModule
+    OnboardingModule,
+    OffboardingModule,
+    SystemModule
   ],
-  providers: [
-    // Health Checks
-    SystemHealthCheck,
-  ]
+  providers: []
 })
 export class AppModule {}
-
