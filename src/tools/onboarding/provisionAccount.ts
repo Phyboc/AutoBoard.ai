@@ -1,24 +1,4 @@
-// import { ExecutionContext } from '@nitrostack/core';
-
-// export class ProvisionAccountTool {
-//   async execute(input: { platform: string; email: string }, ctx: ExecutionContext) {
-//     ctx.logger.info('Provisioning account', { platform: input.platform, email: input.email });
-
-//     // TODO: Implement real account provisioning via platform APIs
-//     return {
-//       success: true,
-//       message: `TODO: Implement provisioning ${input.platform} account for ${input.email}`,
-//       data: {
-//         platform: input.platform,
-//         email: input.email,
-//         status: 'Provisioned'
-//       }
-//     };
-//   }
-// }
-
-
-import { ExecutionContext } from '@nitrostack/core';
+import { ToolDecorator as Tool, z, ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { getResourcePath } from '../utils.js';
 import { Employee } from './createEmployee.js';
@@ -31,55 +11,71 @@ interface ProvisionInput {
 }
 
 export class ProvisionAccountTool {
+  @Tool({
+    name: 'provisionAccount',
+    description: 'Provisions software platforms or tool access for an employee.',
+    inputSchema: z.object({
+      email: z
+        .string()
+        .email('Invalid email address format (must contain @)')
+        .optional(),
+      employeeId: z.string().optional(),
+      platform: z.string().min(1, 'Platform cannot be empty string').optional(),
+      softwareList: z.array(z.string().min(1)).optional(),
+    }),
+  })
   async execute(input: ProvisionInput, ctx: ExecutionContext) {
-    ctx.logger.info('Provisioning accounts', { 
-  email: String(input.email ?? ''), 
-  platform: String(input.platform ?? '') 
-});
+    // ==========================================
+    // 1. BASIC VALIDATION GUARDS
+    // ==========================================
+    const targetIdentifier = (input.email || input.employeeId || '').trim();
 
+    if (!targetIdentifier) {
+      throw new Error('Validation Error: Either email or employeeId must be provided.');
+    }
+
+    if (input.email && !input.email.includes('@')) {
+      throw new Error('Validation Error: Invalid email format. Must contain "@"');
+    }
+
+    const itemsToProvision: string[] = [];
+    if (input.platform && input.platform.trim()) {
+      itemsToProvision.push(input.platform.trim());
+    }
+    if (input.softwareList && Array.isArray(input.softwareList)) {
+      itemsToProvision.push(...input.softwareList.filter((s) => s.trim().length > 0));
+    }
+
+    if (itemsToProvision.length === 0) {
+      throw new Error('Validation Error: At least one non-empty platform or software item must be specified.');
+    }
+
+    ctx.logger.info('Provisioning accounts', {
+      identifier: targetIdentifier,
+      items: itemsToProvision,
+    });
+
+    // ==========================================
+    // 2. FILE PERSISTENCE & EXECUTION LOGIC
+    // ==========================================
     try {
       const filePath = getResourcePath('employees.json');
       const fileData = await readFile(filePath, 'utf-8');
       const employees: Employee[] = JSON.parse(fileData);
 
-      // Identify target employee by email, employeeId, or matching term
-      const targetIdentifier = (input.email || input.employeeId || '').toLowerCase();
-
-      if (!targetIdentifier) {
-        return {
-          success: false,
-          message: 'Either email or employeeId must be provided.',
-          data: { provisioned: [] }
-        };
-      }
-
+      const targetSearch = targetIdentifier.toLowerCase();
       const emp = employees.find(
         (e) =>
-          e.email.toLowerCase() === targetIdentifier ||
-          e.id.toLowerCase() === targetIdentifier ||
-          e.name.toLowerCase().includes(targetIdentifier)
+          e.email.toLowerCase() === targetSearch ||
+          e.id.toLowerCase() === targetSearch ||
+          e.name.toLowerCase().includes(targetSearch)
       );
 
       if (!emp) {
         return {
           success: false,
           message: `Employee matching '${targetIdentifier}' was not found.`,
-          data: { provisioned: [] }
-        };
-      }
-
-      // Consolidate platforms/softwareList into a single array
-      const itemsToProvision: string[] = [];
-      if (input.platform) itemsToProvision.push(input.platform);
-      if (input.softwareList && Array.isArray(input.softwareList)) {
-        itemsToProvision.push(...input.softwareList);
-      }
-
-      if (itemsToProvision.length === 0) {
-        return {
-          success: false,
-          message: 'No platform or software specified to provision.',
-          data: { provisioned: emp.provisionedAccounts }
+          data: { provisioned: [] },
         };
       }
 
@@ -90,7 +86,10 @@ export class ProvisionAccountTool {
 
       await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
 
-      ctx.logger.info('Accounts successfully provisioned', { employeeId: emp.id, provisioned: itemsToProvision });
+      ctx.logger.info('Accounts successfully provisioned', {
+        employeeId: emp.id,
+        provisioned: itemsToProvision,
+      });
 
       return {
         success: true,
@@ -99,15 +98,18 @@ export class ProvisionAccountTool {
           employeeId: emp.id,
           name: emp.name,
           email: emp.email,
-          provisioned: emp.provisionedAccounts
-        }
+          provisioned: emp.provisionedAccounts,
+        },
       };
     } catch (error) {
-      ctx.logger.error('Failed to provision accounts', { error: (error as Error).message });
+      ctx.logger.error('Failed to provision accounts', {
+        error: (error as Error).message,
+      });
+
       return {
         success: false,
         message: `Failed to provision accounts: ${(error as Error).message}`,
-        data: { provisioned: [] }
+        data: { provisioned: [] },
       };
     }
   }

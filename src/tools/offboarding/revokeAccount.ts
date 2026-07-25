@@ -1,92 +1,118 @@
-/*
-import { ExecutionContext } from '@nitrostack/core';
-import { readDB, writeDB } from '../utils/db';
-
-export class RevokeAccountTool {
-	async execute(input: { platform: string; email: string }, ctx: ExecutionContext) {
-		ctx.logger.info('Revoking account', { platform: input.platform, email: input.email });
-
-    // TODO: Implement real account revocation via platform APIs
-    return {
-      success: true,
-      message: `TODO: Implement revoking ${input.platform} account for ${input.email}`,
-      data: {
-        platform: input.platform,
-        email: input.email,
-        status: 'Revoked'
-      }
-    };
-  }
-}
-*/
-
-import { ExecutionContext } from '@nitrostack/core';
+import { ToolDecorator as Tool, z, ExecutionContext } from '@nitrostack/core';
 
 // 1. Hackathon Mock Identity Database
-// This simulates an identity provider (like Okta or Microsoft Entra).
-// We are hardcoding Sarah here so your agent has someone to offboard during the demo.
 export const mockUserDatabase = [
-  { 
-    email: "sarah@company.com", 
-    status: "active", 
-    accounts: ["Slack", "Google Workspace", "Jira", "GitHub"] 
+  {
+    email: 'sarah@company.com',
+    status: 'active',
+    accounts: ['Slack', 'Google Workspace', 'Jira', 'GitHub'],
   },
-  { 
-    email: "alex@company.com", 
-    status: "active", 
-    accounts: ["Slack", "Google Workspace"] 
-  }
+  {
+    email: 'alex@company.com',
+    status: 'active',
+    accounts: ['Slack', 'Google Workspace'],
+  },
 ];
 
 export class RevokeAccountTool {
-  async execute(input: { platform: string; email: string }, ctx: ExecutionContext) {
-    ctx.logger.info('Revoking account', { platform: input.platform, email: input.email });
+  @Tool({
+    name: 'revokeAccount',
+    description: 'Revokes access for an employee on a specified platform.',
+    inputSchema: z.object({
+      platform: z.string().min(1, 'Platform name cannot be empty'),
+      email: z.string().email('Invalid email address format (must contain @)'),
+      confirm: z
+        .boolean()
+        .default(false)
+        .describe('Set to true only after the user explicitly confirms revocation.'),
+    }),
+  })
+  async execute(
+    input: { platform: string; email: string; confirm?: boolean },
+    ctx: ExecutionContext
+  ) {
+    // ==========================================
+    // 1. BASIC VALIDATION GUARDS
+    // ==========================================
+    if (!input.email || !input.email.includes('@')) {
+      throw new Error('Validation Error: Invalid email format. Must contain "@"');
+    }
 
-    // 2. Find the user in our mock database
-    const user = mockUserDatabase.find(u => u.email === input.email);
+    if (!input.platform || !input.platform.trim()) {
+      throw new Error('Validation Error: Platform name cannot be empty.');
+    }
+
+    const cleanEmail = input.email.trim().toLowerCase();
+    const cleanPlatform = input.platform.trim();
+
+    // ==========================================
+    // 2. CONFIRMATION SAFETY GUARD
+    // ==========================================
+    if (!input.confirm) {
+      ctx.logger.warn('Revocation halted: Confirmation required', {
+        email: cleanEmail,
+        platform: cleanPlatform,
+      });
+
+      return {
+        success: false,
+        requiresConfirmation: true,
+        message: `PERMANENT ACTION WARNING: You are about to revoke ${cleanPlatform} access for ${cleanEmail}. Please confirm to proceed.`,
+        data: {
+          platform: cleanPlatform,
+          email: cleanEmail,
+          status: 'Pending Confirmation',
+        },
+      };
+    }
+
+    ctx.logger.info('Revoking account', {
+      platform: cleanPlatform,
+      email: cleanEmail,
+    });
+
+    // ==========================================
+    // 3. EXECUTION & STATE REVOCATION
+    // ==========================================
+    const user = mockUserDatabase.find((u) => u.email.toLowerCase() === cleanEmail);
 
     if (!user) {
-      const errorMsg = `User ${input.email} not found in the employee directory.`;
+      const errorMsg = `User ${cleanEmail} not found in the employee directory.`;
       ctx.logger.warn(errorMsg);
       return {
         success: false,
         message: errorMsg,
-        data: null
+        data: null,
       };
     }
 
-    // 3. Check if they have the account, and if so, remove it (revoke it)
     const accountIndex = user.accounts.findIndex(
-      (acc) => acc.toLowerCase() === input.platform.toLowerCase()
+      (acc) => acc.toLowerCase() === cleanPlatform.toLowerCase()
     );
-    
+
     let wasRevoked = false;
 
     if (accountIndex > -1) {
-      // Remove the platform from their active accounts array
-      user.accounts.splice(accountIndex, 1); 
+      user.accounts.splice(accountIndex, 1);
       wasRevoked = true;
     }
 
-    // 4. Formulate the response for the Agent's "brain"
     const message = wasRevoked
-      ? `Successfully revoked ${input.platform} access for ${input.email}.`
-      : `No action taken. ${input.email} did not have active access to ${input.platform}.`;
+      ? `Successfully revoked ${cleanPlatform} access for ${cleanEmail}.`
+      : `No action taken. ${cleanEmail} did not have active access to ${cleanPlatform}.`;
 
     ctx.logger.info(message);
 
-    // 5. Return the payload to the agent and to your React Widget
     return {
       success: true,
-      message: message,
+      message,
       data: {
-        platform: input.platform,
-        email: input.email,
+        platform: cleanPlatform,
+        email: cleanEmail,
         status: wasRevoked ? 'Revoked' : 'Not Provisioned',
-        // Returning the remaining accounts is perfect for the Widget to update the UI
         remainingAccounts: user.accounts,
-        fullUserState: user 
-      }
+        fullUserState: user,
+      },
     };
   }
 }

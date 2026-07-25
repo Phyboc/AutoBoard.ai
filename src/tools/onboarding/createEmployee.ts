@@ -1,26 +1,4 @@
-// import { ExecutionContext } from '@nitrostack/core';
-
-// export class CreateEmployeeTool {
-//   async execute(input: { name: string; email: string; role: string; startDate: string }, ctx: ExecutionContext) {
-//     ctx.logger.info('Creating employee profile', { name: input.name, role: input.role });
-
-//     // TODO: Implement real employee creation and persistence
-//     return {
-//       success: true,
-//       message: `TODO: Implement creating employee ${input.name} as ${input.role}`,
-//       data: {
-//         name: input.name,
-//         email: input.email,
-//         role: input.role,
-//         startDate: input.startDate,
-//         status: 'Pending'
-//       }
-//     };
-//   }
-// }
-
-
-import { ExecutionContext } from '@nitrostack/core';
+import { ToolDecorator as Tool, z, ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { getResourcePath } from '../utils.js';
 
@@ -36,12 +14,51 @@ export interface Employee {
 }
 
 export class CreateEmployeeTool {
+  @Tool({
+    name: 'createEmployee',
+    description: 'Creates a new employee profile and saves it to local persistence.',
+    inputSchema: z.object({
+      name: z.string().min(1, 'Employee name cannot be empty'),
+      email: z
+        .string()
+        .email('Invalid email address format (must contain @)')
+        .optional(),
+      role: z.string().min(1, 'Role cannot be empty'),
+      startDate: z.string().min(1, 'Start date cannot be empty'),
+    }),
+  })
   async execute(
     input: { name: string; email?: string; role: string; startDate: string },
     ctx: ExecutionContext
   ) {
-    ctx.logger.info('Creating employee profile', { name: input.name, role: input.role });
+    // ==========================================
+    // 1. BASIC VALIDATION GUARDS
+    // ==========================================
+    if (!input.name || !input.name.trim()) {
+      throw new Error('Validation Error: Employee name cannot be empty.');
+    }
 
+    if (!input.role || !input.role.trim()) {
+      throw new Error('Validation Error: Employee role cannot be empty.');
+    }
+
+    const email =
+      input.email?.trim() ||
+      `${input.name.toLowerCase().replace(/\s+/g, '.')}@company.com`;
+
+    if (!email.includes('@')) {
+      throw new Error('Validation Error: Invalid email format. Must contain "@"');
+    }
+
+    ctx.logger.info('Creating employee profile', {
+      name: input.name,
+      role: input.role,
+      email,
+    });
+
+    // ==========================================
+    // 2. FILE PERSISTENCE LOGIC
+    // ==========================================
     try {
       const filePath = getResourcePath('employees.json');
 
@@ -51,41 +68,45 @@ export class CreateEmployeeTool {
         employees = JSON.parse(fileData);
       } catch (readError) {
         ctx.logger.warn('employees.json missing or unreadable, starting empty', {
-          error: (readError as Error).message
+          error: (readError as Error).message,
         });
       }
 
-      const email = input.email || `${input.name.toLowerCase().replace(/\s+/g, '.')}@company.com`;
       const id = `emp-${Date.now().toString().slice(-4)}`;
 
       const newEmployee: Employee = {
         id,
-        name: input.name,
+        name: input.name.trim(),
         email,
-        role: input.role,
+        role: input.role.trim(),
         startDate: input.startDate,
         status: 'Onboarding',
         provisionedAccounts: [],
-        assignedTraining: []
+        assignedTraining: [],
       };
 
       employees.push(newEmployee);
       await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
 
-      ctx.logger.info('Successfully created employee profile', { id, name: input.name });
+      ctx.logger.info('Successfully created employee profile', {
+        id,
+        name: input.name,
+      });
 
       return {
         success: true,
         message: `Successfully created employee profile for ${input.name}`,
-        data: newEmployee
+        data: newEmployee,
       };
     } catch (error) {
-      ctx.logger.error('Failed to create employee', { error: (error as Error).message });
+      ctx.logger.error('Failed to create employee', {
+        error: (error as Error).message,
+      });
 
       return {
         success: false,
         message: `Failed to create employee profile: ${(error as Error).message}`,
-        data: null
+        data: null,
       };
     }
   }
