@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Alex",
+    "email": "alex@company.com",
+    "role": "Engineering Manager",
+    "status": "Active"
+  },
+  {
+    "name": "Sarah",
+    "email": "sarah@company.com",
+    "role": "Junior Frontend Developer",
+    "status": "Pending"
+  },
+  {
+    "name": "Bob",
+    "email": "bob@company.com",
+    "role": "Senior Backend Developer",
+    "status": "Active"
+  }
+]
