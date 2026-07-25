@@ -16,6 +16,7 @@
   "dependencies": {
     "@modelcontextprotocol/ext-apps": ">=0.1.0",
     "@nitrostack/core": "^1.0.14",
+    "@nitrostack/widgets": "^1.0.8",
     "dotenv": "^16.3.1",
     "nodemailer": "^9.0.3",
     "zod": "^3.22.4"
@@ -24,6 +25,9 @@
     "@nitrostack/cli": "^1.0.15",
     "@types/node": "^22.10.0",
     "@types/nodemailer": "^8.0.1",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.23",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.3.3"
   },
   "author": "Govind Nair, Samanyu Nair, Shreyas N, Sivasubramani K J",
