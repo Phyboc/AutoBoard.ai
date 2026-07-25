@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
 	"sarah@company.com": [
 		"Frontend Bug #12",
@@ -13,3 +14,63 @@
 		"Cache Invalidation Bug"
 	]
 }
+=======
+[
+  {
+    "id": "TICK-201",
+    "title": "Fix CSS grid breakpoint bug on main dashboard",
+    "assignee": "Sarah Miller",
+    "status": "In Progress",
+    "priority": "High"
+  },
+  {
+    "id": "TICK-202",
+    "title": "Refactor Button component for WCAG 2.1 accessibility",
+    "assignee": "Sarah Miller",
+    "status": "To Do",
+    "priority": "Medium"
+  },
+  {
+    "id": "TICK-203",
+    "title": "Migrate user auth context to Nitro Stack hook",
+    "assignee": "Sarah Miller",
+    "status": "In Review",
+    "priority": "High"
+  },
+  {
+    "id": "TICK-204",
+    "title": "Optimize GraphQL query latency in Search Service",
+    "assignee": "Alex Rivera",
+    "status": "In Progress",
+    "priority": "High"
+  },
+  {
+    "id": "TICK-205",
+    "title": "Update Figma design tokens for Q3 rebranding",
+    "assignee": "Jordan Lee",
+    "status": "In Progress",
+    "priority": "Medium"
+  },
+  {
+    "id": "TICK-206",
+    "title": "Setup Kubernetes auto-scaling policies for staging cluster",
+    "assignee": "Marcus Chen",
+    "status": "To Do",
+    "priority": "High"
+  },
+  {
+    "id": "TICK-207",
+    "title": "Audit Datadog alert thresholds for payment service",
+    "assignee": "Alex Rivera",
+    "status": "To Do",
+    "priority": "Low"
+  },
+  {
+    "id": "TICK-208",
+    "title": "Setup onboarding automated workflow in Nitro Stack",
+    "assignee": "Sarah Miller",
+    "status": "To Do",
+    "priority": "Medium"
+  }
+]
+>>>>>>> dbaff4ec32b40750c23917414ece56bb3632eef3

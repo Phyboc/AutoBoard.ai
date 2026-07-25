@@ -1,32 +1,81 @@
+// 
+
 import { ExecutionContext } from '@nitrostack/core';
-import { readDB } from '../utils/db';
+import { readFile, writeFile } from 'node:fs/promises';
+import { getResourcePath } from './utils';
+import { Employee } from './createEmployee';
+
+interface AssignTrainingInput {
+  email?: string;
+  employeeId?: string;
+  modules: string[];
+}
 
 export class AssignTrainingTool {
-	async execute(input: { email: string; modules: string[] }, ctx: ExecutionContext) {
-		ctx.logger.info('Assigning training modules', { email: input.email, modules: input.modules });
+  async execute(input: AssignTrainingInput, ctx: ExecutionContext) {
+    ctx.logger.info('Assigning training modules', { 
+      email: input.email ?? '', 
+      moduleCount: input.modules?.length ?? 0 
+    });
 
-		const employees = (await readDB('employees.json')) || [];
-		const employee = employees.find((e: any) => e.email === input.email);
+    try {
+      const filePath = getResourcePath('employees.json');
+      const fileData = await readFile(filePath, 'utf-8');
+      const employees: Employee[] = JSON.parse(fileData);
 
-		if (!employee) {
-			ctx.logger.warn(`Employee with email '${input.email}' not found for training assignment`);
-			return {
-				success: false,
-				message: `Employee with email ${input.email} was not found.`,
-				data: null
-			};
-		}
+      const identifier = (input.email || input.employeeId || '').toLowerCase();
 
-		ctx.logger.info(`Successfully assigned ${input.modules.length} training module(s) to ${input.email}`);
+      if (!identifier) {
+        return {
+          success: false,
+          message: 'Either email or employeeId must be provided.',
+          data: { assigned: [] }
+        };
+      }
 
-		return {
-			success: true,
-			message: `Successfully assigned training modules to ${input.email}`,
-			data: {
-				email: input.email,
-				modules: input.modules,
-				status: 'Assigned'
-			}
-		};
-	}
+      const emp = employees.find(
+        (e) =>
+          e.email.toLowerCase() === identifier ||
+          e.id.toLowerCase() === identifier ||
+          e.name.toLowerCase().includes(identifier)
+      );
+
+      if (!emp) {
+        return {
+          success: false,
+          message: `Employee matching '${identifier}' was not found.`,
+          data: { assigned: [] }
+        };
+      }
+
+      const modulesToAssign = Array.isArray(input.modules) ? input.modules : [];
+
+      // Add modules to assignedTraining without duplicates
+      emp.assignedTraining = Array.from(
+        new Set([...(emp.assignedTraining || []), ...modulesToAssign])
+      );
+
+      await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
+
+      ctx.logger.info('Training modules successfully assigned', { employeeId: emp.id });
+
+      return {
+        success: true,
+        message: `Successfully assigned ${modulesToAssign.length} training module(s) to ${emp.name}`,
+        data: {
+          employeeId: emp.id,
+          name: emp.name,
+          email: emp.email,
+          assigned: emp.assignedTraining
+        }
+      };
+    } catch (error) {
+      ctx.logger.error('Failed to assign training', { error: (error as Error).message });
+      return {
+        success: false,
+        message: `Failed to assign training: ${(error as Error).message}`,
+        data: { assigned: [] }
+      };
+    }
+  }
 }
