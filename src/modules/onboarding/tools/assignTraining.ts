@@ -1,6 +1,7 @@
 import { ExecutionContext } from '@nitrostack/core';
-import { readFile, writeFile } from 'node:fs/promises';
-import { getResourcePath } from '../../../shared/utils/resource-path.js';
+import { readDB, writeDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 import { Employee } from './createEmployee.js';
 
 interface AssignTrainingInput {
@@ -11,25 +12,36 @@ interface AssignTrainingInput {
 
 export class AssignTrainingTool {
   async execute(input: AssignTrainingInput, ctx: ExecutionContext) {
+    const tracker = new ExecutionTracker('ASSIGN_TRAINING');
+    const identifier = (input.email || input.employeeId || '').toLowerCase();
+
     ctx.logger.info('Assigning training modules', { 
       email: input.email ?? '', 
       moduleCount: input.modules?.length ?? 0 
     });
 
+    if (!identifier) {
+      const errMsg = 'Either email or employeeId must be provided.';
+      await tracker.addStep('Validation', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: 'UNKNOWN',
+        action: 'ASSIGN_TRAINING',
+        system: 'LMS / Training System',
+        status: 'FAILED',
+        details: errMsg
+      });
+
+      return {
+        success: false,
+        message: errMsg,
+        data: { assigned: [] }
+      };
+    }
+
     try {
-      const filePath = getResourcePath('employees.json');
-      const fileData = await readFile(filePath, 'utf-8');
-      const employees: Employee[] = JSON.parse(fileData);
-
-      const identifier = (input.email || input.employeeId || '').toLowerCase();
-
-      if (!identifier) {
-        return {
-          success: false,
-          message: 'Either email or employeeId must be provided.',
-          data: { assigned: [] }
-        };
-      }
+      const employees: Employee[] = (await readDB('employees.json')) || [];
 
       const emp = employees.find(
         (e) =>
@@ -39,23 +51,45 @@ export class AssignTrainingTool {
       );
 
       if (!emp) {
+        const notFoundMsg = `Employee matching '${identifier}' was not found.`;
+        await tracker.addStep('Find Employee', 'FAILED', notFoundMsg);
+        await tracker.finishWorkflow();
+
+        await logAudit({
+          employee: identifier,
+          action: 'ASSIGN_TRAINING',
+          system: 'LMS / Training System',
+          status: 'FAILED',
+          details: notFoundMsg
+        });
+
         return {
           success: false,
-          message: `Employee matching '${identifier}' was not found.`,
+          message: notFoundMsg,
           data: { assigned: [] }
         };
       }
 
       const modulesToAssign = Array.isArray(input.modules) ? input.modules : [];
 
-      // Add modules to assignedTraining without duplicates
       emp.assignedTraining = Array.from(
         new Set([...(emp.assignedTraining || []), ...modulesToAssign])
       );
 
-      await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
+      await writeDB('employees.json', employees);
 
       ctx.logger.info('Training modules successfully assigned', { employeeId: emp.id });
+
+      await tracker.addStep('Assign Training', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: emp.email,
+        action: 'ASSIGN_TRAINING',
+        system: 'LMS / Training System',
+        status: 'SUCCESS',
+        details: `Assigned modules: ${modulesToAssign.join(', ')}`
+      });
 
       return {
         success: true,
@@ -68,10 +102,23 @@ export class AssignTrainingTool {
         }
       };
     } catch (error) {
-      ctx.logger.error('Failed to assign training', { error: (error as Error).message });
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to assign training', { error: errMsg });
+
+      await tracker.addStep('Assign Training', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: identifier,
+        action: 'ASSIGN_TRAINING',
+        system: 'LMS / Training System',
+        status: 'FAILED',
+        details: errMsg
+      });
+
       return {
         success: false,
-        message: `Failed to assign training: ${(error as Error).message}`,
+        message: `Failed to assign training: ${errMsg}`,
         data: { assigned: [] }
       };
     }

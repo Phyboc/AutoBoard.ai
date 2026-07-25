@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "id": "exec-892198",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T20:38:12.203Z"
+      }
+    ],
+    "startTime": "2026-07-25T20:38:12.198Z",
+    "endTime": "2026-07-25T20:38:12.205Z"
+  },
+  {
+    "id": "exec-892213",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T20:38:12.219Z"
+      }
+    ],
+    "startTime": "2026-07-25T20:38:12.213Z",
+    "endTime": "2026-07-25T20:38:12.223Z"
+  },
+  {
+    "id": "exec-892229",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T20:38:12.232Z"
+      }
+    ],
+    "startTime": "2026-07-25T20:38:12.229Z",
+    "endTime": "2026-07-25T20:38:12.234Z"
+  },
+  {
+    "id": "exec-892238",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T20:38:12.243Z"
+      }
+    ],
+    "startTime": "2026-07-25T20:38:12.238Z",
+    "endTime": "2026-07-25T20:38:12.246Z"
+  },
+  {
+    "id": "exec-892253",
+    "type": "MARK_EMPLOYEE_INACTIVE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Mark Employee Inactive",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T20:38:12.257Z"
+      }
+    ],
+    "startTime": "2026-07-25T20:38:12.253Z",
+    "endTime": "2026-07-25T20:38:12.259Z"
+  },
+  {
+    "id": "exec-002031",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-25T20:40:02.039Z"
+      }
+    ],
+    "startTime": "2026-07-25T20:40:02.031Z",
+    "endTime": "2026-07-25T20:40:02.042Z"
+  }
+]

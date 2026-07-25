@@ -1,5 +1,3 @@
-// src/utils/executionTracker.ts
-
 import { readDB, writeDB } from './db.js';
 
 export interface ExecutionStep {
@@ -72,15 +70,19 @@ export class ExecutionTracker {
   }
 
   private async save() {
-    const executions = (await readDB('execution.json')) || [];
-    const index = executions.findIndex((e: any) => e.id === this.record.id);
-    
-    if (index > -1) {
-      executions[index] = this.record;
-    } else {
-      executions.push(this.record);
+    try {
+      const executions = (await readDB('execution.json')) || [];
+      const index = executions.findIndex((e: any) => e.id === this.record.id);
+
+      if (index > -1) {
+        executions[index] = this.record;
+      } else {
+        executions.push(this.record);
+      }
+
+      await writeDB('execution.json', executions);
+    } catch (error) {
+      console.error('[EXECUTION TRACKER ERROR]', error);
     }
-    
-    await writeDB('execution.json', executions);
   }
 }

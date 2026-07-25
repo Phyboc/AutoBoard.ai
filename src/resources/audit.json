@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "timestamp": "2026-07-25T20:38:12.211Z",
+    "employee": "test.audit@company.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Test Audit Employee (emp-2202) with role Junior Frontend Developer"
+  },
+  {
+    "timestamp": "2026-07-25T20:38:12.227Z",
+    "employee": "test.audit@company.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "GitHub",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [GitHub] for Test Audit Employee"
+  },
+  {
+    "timestamp": "2026-07-25T20:38:12.236Z",
+    "employee": "test.audit@company.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security 101, Frontend Intro"
+  },
+  {
+    "timestamp": "2026-07-25T20:38:12.251Z",
+    "employee": "test.audit@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "GitHub",
+    "status": "SUCCESS",
+    "details": "Successfully revoked GitHub access for test.audit@company.com."
+  },
+  {
+    "timestamp": "2026-07-25T20:38:12.262Z",
+    "employee": "test.audit@company.com",
+    "action": "MARK_EMPLOYEE_INACTIVE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Updated employee status for Test Audit Employee (emp-2202) to Offboarded"
+  },
+  {
+    "timestamp": "2026-07-25T20:40:02.046Z",
+    "employee": "shreyas@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Shreyas (emp-2036) with role Junior Software Developer"
+  }
+]

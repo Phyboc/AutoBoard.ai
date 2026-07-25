@@ -1,8 +1,8 @@
 import { ExecutionContext } from '@nitrostack/core';
+import { readDB, writeDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 
-// 1. Hackathon Mock Database
-// We place this here so you have instant fake data to prove the logic works.
-// In a real app, you would fetch this from Jira or Linear's API.
 const mockTicketDatabase = [
   { id: "TKT-101", title: "Update Navbar CSS", assignee: "sarah@company.com", status: "In Progress" },
   { id: "TKT-102", title: "Fix Login Bug", assignee: "sarah@company.com", status: "Open" },
@@ -12,40 +12,121 @@ const mockTicketDatabase = [
 
 export class ReassignTicketsTool {
   async execute(input: { oldEmail: string; newEmail: string }, ctx: ExecutionContext) {
-    ctx.logger.info('Reassigning tickets', { from: input.oldEmail, to: input.newEmail });
+    const tracker = new ExecutionTracker('REASSIGN_TICKETS');
+    const cleanOldEmail = (input.oldEmail || '').trim().toLowerCase();
+    const cleanNewEmail = (input.newEmail || '').trim().toLowerCase();
 
-    // 2. Track which tickets we are modifying for the UI/LLM response
-    const reassignedTicketIds: string[] = [];
-    let reassignedCount = 0;
+    ctx.logger.info('Reassigning tickets', { from: cleanOldEmail, to: cleanNewEmail });
 
-    // 3. Execute the actual reassignment logic on the mock database
-    mockTicketDatabase.forEach(ticket => {
-      if (ticket.assignee === input.oldEmail) {
-        ticket.assignee = input.newEmail; // The reassignment
-        reassignedTicketIds.push(ticket.id);
-        reassignedCount++;
+    if (!cleanOldEmail || !cleanOldEmail.includes('@')) {
+      const err = 'Validation Error: Source email (oldEmail) is invalid or missing "@".';
+      await tracker.addStep('Validation', 'FAILED', err);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: cleanOldEmail || 'UNKNOWN',
+        action: 'REASSIGN_TICKETS',
+        system: 'Ticketing System',
+        status: 'FAILED',
+        details: err,
+      });
+
+      return {
+        success: false,
+        message: err,
+        data: null
+      };
+    }
+
+    if (!cleanNewEmail || !cleanNewEmail.includes('@')) {
+      const err = 'Validation Error: Target email (newEmail) is invalid or missing "@".';
+      await tracker.addStep('Validation', 'FAILED', err);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: cleanOldEmail,
+        action: 'REASSIGN_TICKETS',
+        system: 'Ticketing System',
+        status: 'FAILED',
+        details: err,
+      });
+
+      return {
+        success: false,
+        message: err,
+        data: null
+      };
+    }
+
+    try {
+      let ticketDatabase = await readDB('tickets.json');
+      if (!ticketDatabase || !Array.isArray(ticketDatabase) || ticketDatabase.length === 0) {
+        ticketDatabase = mockTicketDatabase;
       }
-    });
 
-    // 4. Formulate a clean message for the Agent's "Brain" to read
-    const message = reassignedCount > 0 
-      ? `Successfully reassigned ${reassignedCount} tickets from ${input.oldEmail} to ${input.newEmail}.`
-      : `No active tickets found for ${input.oldEmail}. Nothing to reassign.`;
+      const reassignedTicketIds: string[] = [];
+      let reassignedCount = 0;
 
-    ctx.logger.info(message);
+      ticketDatabase.forEach((ticket: any) => {
+        if (ticket.assignee?.toLowerCase() === cleanOldEmail) {
+          ticket.assignee = cleanNewEmail;
+          reassignedTicketIds.push(ticket.id);
+          reassignedCount++;
+        }
+      });
 
-    // 5. Return the payload. The 'data' object is what you will pass to your React Widget!
-    return {
-      success: true,
-      message: message,
-      data: {
-        from: input.oldEmail,
-        to: input.newEmail,
-        totalReassigned: reassignedCount,
-        ticketIds: reassignedTicketIds,
-        // We return the whole updated database so your Widget can display the new state
-        currentTicketState: mockTicketDatabase 
+      if (reassignedCount > 0) {
+        await writeDB('tickets.json', ticketDatabase);
       }
-    };
+
+      const message = reassignedCount > 0 
+        ? `Successfully reassigned ${reassignedCount} tickets from ${cleanOldEmail} to ${cleanNewEmail}.`
+        : `No active tickets found for ${cleanOldEmail}. Nothing to reassign.`;
+
+      ctx.logger.info(message);
+
+      await tracker.addStep('Reassign Tickets', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: cleanOldEmail,
+        action: 'REASSIGN_TICKETS',
+        system: 'Ticketing System',
+        status: 'SUCCESS',
+        details: `Reassigned ${reassignedCount} ticket(s) [${reassignedTicketIds.join(', ')}] to ${cleanNewEmail}`,
+      });
+
+      return {
+        success: true,
+        message: message,
+        data: {
+          from: cleanOldEmail,
+          to: cleanNewEmail,
+          totalReassigned: reassignedCount,
+          ticketIds: reassignedTicketIds,
+          currentTicketState: ticketDatabase 
+        }
+      };
+    } catch (error) {
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to reassign tickets', { error: errMsg });
+
+      await tracker.addStep('Reassign Tickets', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: cleanOldEmail,
+        action: 'REASSIGN_TICKETS',
+        system: 'Ticketing System',
+        status: 'FAILED',
+        details: errMsg,
+      });
+
+      return {
+        success: false,
+        message: `Failed to reassign tickets: ${errMsg}`,
+        data: null
+      };
+    }
   }
 }

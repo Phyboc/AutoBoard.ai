@@ -152,5 +152,28 @@
       "github"
     ],
     "assignedTraining": []
+  },
+  {
+    "id": "emp-2202",
+    "name": "Test Audit Employee",
+    "email": "test.audit@company.com",
+    "role": "Junior Frontend Developer",
+    "startDate": "2026-08-01",
+    "status": "Offboarded",
+    "provisionedAccounts": [],
+    "assignedTraining": [
+      "Security 101",
+      "Frontend Intro"
+    ]
+  },
+  {
+    "id": "emp-2036",
+    "name": "Shreyas",
+    "email": "shreyas@gmail.com",
+    "role": "Junior Software Developer",
+    "startDate": "2026-07-26",
+    "status": "Onboarding",
+    "provisionedAccounts": [],
+    "assignedTraining": []
   }
 ]
