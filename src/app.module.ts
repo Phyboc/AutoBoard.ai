@@ -1,5 +1,4 @@
 import { McpApp, Module, ConfigModule } from '@nitrostack/core';
-import { CalculatorModule } from './modules/calculator/calculator.module.js';
 import { EmployeeLifecycleModule } from './modules/employee-lifecycle/employee-lifecycle.module.js';
 import { SystemHealthCheck } from './health/system.health.js';
 
@@ -24,7 +23,6 @@ import { SystemHealthCheck } from './health/system.health.js';
   description: 'Root application module',
   imports: [
     ConfigModule.forRoot(),
-    CalculatorModule,
     EmployeeLifecycleModule
   ],
   providers: [
