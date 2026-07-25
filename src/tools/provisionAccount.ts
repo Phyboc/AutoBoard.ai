@@ -32,7 +32,10 @@ interface ProvisionInput {
 
 export class ProvisionAccountTool {
   async execute(input: ProvisionInput, ctx: ExecutionContext) {
-    ctx.logger.info('Provisioning accounts', { input });
+    ctx.logger.info('Provisioning accounts', { 
+  email: String(input.email ?? ''), 
+  platform: String(input.platform ?? '') 
+});
 
     try {
       const filePath = getResourcePath('employees.json');

@@ -109,7 +109,8 @@
     "startDate": "25-07-2026",
     "status": "Onboarding",
     "provisionedAccounts": [
-      "github"
+      "github",
+      "spotify"
     ],
     "assignedTraining": []
   }
