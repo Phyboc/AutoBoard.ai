@@ -1,5 +1,5 @@
 import { ExecutionContext } from '@nitrostack/core';
-import { readDB, writeDB } from '../utils/db';
+import { readDB, writeDB } from '../../utils/db.js';
 
 // 1. Hackathon Mock Database
 // We place this here so you have instant fake data to prove the logic works.
@@ -12,8 +12,8 @@ const mockTicketDatabase = [
 ];
 
 export class ReassignTicketsTool {
-	async execute(input: { oldEmail: string; newEmail: string }, ctx: ExecutionContext) {
-		ctx.logger.info('Reassigning tickets', { from: input.oldEmail, to: input.newEmail });
+  async execute(input: { oldEmail: string; newEmail: string }, ctx: ExecutionContext) {
+    ctx.logger.info('Reassigning tickets', { from: input.oldEmail, to: input.newEmail });
 
     // 2. Track which tickets we are modifying for the UI/LLM response
     const reassignedTicketIds: string[] = [];

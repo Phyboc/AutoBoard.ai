@@ -19,8 +19,8 @@
 
 import { ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
-import { getResourcePath } from './utils';
-import { Employee } from './createEmployee';
+import { getResourcePath } from '../utils.js';
+import { Employee } from './createEmployee.js';
 import nodemailer from 'nodemailer';
 
 interface SendWelcomeEmailInput {

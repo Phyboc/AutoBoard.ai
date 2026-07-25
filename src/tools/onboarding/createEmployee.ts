@@ -22,7 +22,7 @@
 
 import { ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
-import { getResourcePath } from './utils';
+import { getResourcePath } from '../utils.js';
 
 export interface Employee {
   id: string;

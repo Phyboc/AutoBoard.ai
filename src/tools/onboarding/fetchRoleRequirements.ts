@@ -21,7 +21,7 @@
 
 import { ExecutionContext } from '@nitrostack/core';
 import { readFile } from 'node:fs/promises';
-import { getResourcePath } from './utils';
+import { getResourcePath } from '../utils.js';
 
 export interface RoleRequirements {
   software: string[];
@@ -30,8 +30,8 @@ export interface RoleRequirements {
 }
 
 export class FetchRoleRequirementsTool {
-	async execute(input: { role: string }, ctx: ExecutionContext) {
-		ctx.logger.info('Fetching role requirements', { role: input.role });
+  async execute(input: { role: string }, ctx: ExecutionContext) {
+    ctx.logger.info('Fetching role requirements', { role: input.role });
 
     try {
       const filePath = getResourcePath('roles.json');

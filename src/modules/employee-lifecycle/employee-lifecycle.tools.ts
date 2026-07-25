@@ -1,13 +1,13 @@
 import { ToolDecorator as Tool, ExecutionContext, z } from '@nitrostack/core';
-import { FetchRoleRequirementsTool } from '../../tools/fetchRoleRequirements.js';
-import { CreateEmployeeTool } from '../../tools/createEmployee.js';
-import { ProvisionAccountTool } from '../../tools/provisionAccount.js';
-import { AssignTrainingTool } from '../../tools/assignTraining.js';
-import { SendWelcomeEmailTool } from '../../tools/sendWelcomeEmail.js';
-import { GetUserAccessTool } from '../../tools/getUserAccess.js';
-import { RevokeAccountTool } from '../../tools/revokeAccount.js';
-import { ReassignTicketsTool } from '../../tools/reassignTickets.js';
-import { MarkEmployeeInactiveTool } from '../../tools/markEmployeeInactive.js';
+import { FetchRoleRequirementsTool } from '../../tools/onboarding/fetchRoleRequirements.js';
+import { CreateEmployeeTool } from '../../tools/onboarding/createEmployee.js';
+import { ProvisionAccountTool } from '../../tools/onboarding/provisionAccount.js';
+import { AssignTrainingTool } from '../../tools/onboarding/assignTraining.js';
+import { SendWelcomeEmailTool } from '../../tools/onboarding/sendWelcomeEmail.js';
+import { GetUserAccessTool } from '../../tools/offboarding/getUserAccess.js';
+import { RevokeAccountTool } from '../../tools/offboarding/revokeAccount.js';
+import { ReassignTicketsTool } from '../../tools/offboarding/reassignTickets.js';
+import { MarkEmployeeInactiveTool } from '../../tools/offboarding/markEmployeeInactive.js';
 
 /**
  * Composite tool class that aggregates all employee lifecycle tools.
