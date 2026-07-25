@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { readDB, writeDB } from './db.js';
 
 export interface AuditLog {
@@ -5,35 +6,32 @@ export interface AuditLog {
   employee: string;
   action: string;
   system: string;
-  status: 'SUCCESS' | 'FAILED' | 'WAITING_CONFIRMATION';
+  status: 'SUCCESS' | 'FAILED' | 'PENDING_CONFIRMATION' | 'NO_OP';
   details?: string;
 }
 
-/**
- * Log an audit event to `audit.json`.
- *
- * Safely appends to the existing array (readDB now guarantees a valid Array).
- * Outputs a human-readable console message on success or errors on failure.
- */
 export async function logAudit(entry: AuditLog): Promise<void> {
-  try {
-    // readDB now always returns a valid Array (never null/undefined)
-    const logs: any[] = await readDB('audit.json');
+  const resolvedPath = path.resolve(process.cwd(), 'src', 'resources', 'audit.json');
+  console.log(`[AUDIT DEBUG] Attempting write to: ${resolvedPath}`);
 
-    const newLog = {
+  try {
+    const existingLogs = await readDB('audit.json');
+
+    const newLog: AuditLog = {
       timestamp: new Date().toISOString(),
-      ...entry
+      ...entry,
     };
 
-    logs.push(newLog);
-    const written = await writeDB('audit.json', logs);
+    existingLogs.push(newLog);
+
+    const written = await writeDB('audit.json', existingLogs);
 
     if (written) {
-      console.log(`[AUDIT LOGGED] ${newLog.action} | ${newLog.employee} | ${newLog.status} | ${newLog.system}`);
+      console.log(`[AUDIT SUCCESS] ${newLog.action} recorded for ${newLog.employee}`);
     } else {
-      console.error(`[AUDIT FAILED] Could not persist audit entry: ${newLog.action} | ${newLog.employee}`);
+      console.error(`[AUDIT FAILURE] writeDB returned false for ${newLog.action}`);
     }
   } catch (error) {
-    console.error('[AUDIT CRITICAL] Failed to write audit log entry:', error);
+    console.error('[AUDIT CRITICAL ERROR]', error);
   }
 }

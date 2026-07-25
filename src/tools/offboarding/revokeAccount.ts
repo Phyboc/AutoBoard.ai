@@ -80,7 +80,7 @@ export class RevokeAccountTool {
         employee: cleanEmail,
         action: 'REVOKE_ACCOUNT',
         system: cleanPlatform,
-        status: 'WAITING_CONFIRMATION',
+        status: 'PENDING_CONFIRMATION',
         details: `Revocation halted pending user confirmation for ${cleanPlatform}`,
       });
 
@@ -163,7 +163,7 @@ export class RevokeAccountTool {
         employee: user.email || cleanEmail,
         action: 'REVOKE_ACCOUNT',
         system: cleanPlatform,
-        status: wasRevoked ? 'SUCCESS' : 'FAILED',
+        status: wasRevoked ? 'SUCCESS' : 'NO_OP',
         details: message,
       });
 

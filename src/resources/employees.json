@@ -147,7 +147,10 @@
     "role": "Junior Software Developer",
     "startDate": "2025-07-26",
     "status": "Onboarding",
-    "provisionedAccounts": [],
+    "provisionedAccounts": [
+      "samanyu",
+      "github"
+    ],
     "assignedTraining": []
   }
 ]
