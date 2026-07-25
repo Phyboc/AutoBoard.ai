@@ -1,15 +1,15 @@
 {
-  "sarah@company.com": [
-    "Frontend Bug #12",
-    "Landing Page Update"
-  ],
-  "alex@company.com": [
-    "Team Standup Automation",
-    "Code Review Pipeline"
-  ],
-  "bob@company.com": [
-    "API Rate Limiting",
-    "Database Migration Script",
-    "Cache Invalidation Bug"
-  ]
+	"sarah@company.com": [
+		"Frontend Bug #12",
+		"Landing Page Update"
+	],
+	"alex@company.com": [
+		"Team Standup Automation",
+		"Code Review Pipeline"
+	],
+	"bob@company.com": [
+		"API Rate Limiting",
+		"Database Migration Script",
+		"Cache Invalidation Bug"
+	]
 }
