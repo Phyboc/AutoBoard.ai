@@ -113,5 +113,15 @@
       "spotify"
     ],
     "assignedTraining": []
+  },
+  {
+    "id": "emp-7504",
+    "name": "Govind",
+    "email": "govind@gmail.com",
+    "role": "Junior Frontend Developer",
+    "startDate": "Monday",
+    "status": "Onboarding",
+    "provisionedAccounts": [],
+    "assignedTraining": []
   }
 ]
