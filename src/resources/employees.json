@@ -1,5 +1,46 @@
 [
   {
+<<<<<<< HEAD
+    "name": "Alex",
+    "email": "alex@company.com",
+    "role": "Engineering Manager",
+    "status": "Active",
+    "accounts": [
+      "Google Workspace",
+      "Slack",
+      "GitHub",
+      "Jira",
+      "1Password",
+      "AWS Console"
+    ]
+  },
+  {
+    "name": "Bob",
+    "email": "bob@company.com",
+    "role": "Senior Backend Developer",
+    "status": "Active",
+    "accounts": [
+      "Google Workspace",
+      "Slack",
+      "GitHub",
+      "Jira",
+      "AWS Console",
+      "Datadog"
+    ]
+  },
+  {
+    "name": "Sarah",
+    "email": "sarah@email.com",
+    "role": "Junior Frontend Developer",
+    "startDate": "Monday",
+    "status": "Inactive",
+    "accounts": [
+      "Google Workspace",
+      "Slack",
+      "GitHub",
+      "Jira"
+    ]
+=======
     "id": "emp-1001",
     "name": "Alex Rivera",
     "email": "alex.rivera@company.com",
@@ -113,5 +154,6 @@
       "spotify"
     ],
     "assignedTraining": []
+>>>>>>> dbaff4ec32b40750c23917414ece56bb3632eef3
   }
 ]

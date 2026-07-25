@@ -1,9 +1,10 @@
 /*
 import { ExecutionContext } from '@nitrostack/core';
+import { readDB, writeDB } from '../utils/db';
 
 export class RevokeAccountTool {
-  async execute(input: { platform: string; email: string }, ctx: ExecutionContext) {
-    ctx.logger.info('Revoking account', { platform: input.platform, email: input.email });
+	async execute(input: { platform: string; email: string }, ctx: ExecutionContext) {
+		ctx.logger.info('Revoking account', { platform: input.platform, email: input.email });
 
     // TODO: Implement real account revocation via platform APIs
     return {

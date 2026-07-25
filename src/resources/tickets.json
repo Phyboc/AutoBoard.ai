@@ -1,3 +1,20 @@
+<<<<<<< HEAD
+{
+	"sarah@company.com": [
+		"Frontend Bug #12",
+		"Landing Page Update"
+	],
+	"alex@company.com": [
+		"Team Standup Automation",
+		"Code Review Pipeline"
+	],
+	"bob@company.com": [
+		"API Rate Limiting",
+		"Database Migration Script",
+		"Cache Invalidation Bug"
+	]
+}
+=======
 [
   {
     "id": "TICK-201",
@@ -56,3 +73,4 @@
     "priority": "Medium"
   }
 ]
+>>>>>>> dbaff4ec32b40750c23917414ece56bb3632eef3
