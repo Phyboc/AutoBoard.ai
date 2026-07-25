@@ -1,26 +1,8 @@
-// import { ExecutionContext } from '@nitrostack/core';
-
-// export class SendWelcomeEmailTool {
-//   async execute(input: { email: string }, ctx: ExecutionContext) {
-//     ctx.logger.info('Sending welcome email', { email: input.email });
-
-//     // TODO: Implement real email sending via email service
-//     return {
-//       success: true,
-//       message: `TODO: Implement sending welcome email to ${input.email}`,
-//       data: {
-//         email: input.email,
-//         status: 'Sent'
-//       }
-//     };
-//   }
-// }
-
-
 import { ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { getResourcePath } from '../utils.js';
 import { Employee } from './createEmployee.js';
+import { logAudit } from '../../utils/auditLogger.js'; // Added Audit Logger
 import nodemailer from 'nodemailer';
 
 interface SendWelcomeEmailInput {
@@ -31,21 +13,40 @@ export class SendWelcomeEmailTool {
   async execute(input: SendWelcomeEmailInput, ctx: ExecutionContext) {
     ctx.logger.info('Sending welcome email', { email: input.email });
 
+    const targetEmail = (input.email || '').toLowerCase().trim();
+
+    if (!targetEmail) {
+      return {
+        success: false,
+        message: 'Email must be provided.',
+        data: { email: input.email, status: 'Failed' }
+      };
+    }
+
     try {
       const filePath = getResourcePath('employees.json');
       const fileData = await readFile(filePath, 'utf-8');
       const employees: Employee[] = JSON.parse(fileData);
-
-      const targetEmail = (input.email || '').toLowerCase().trim();
 
       const emp = employees.find(
         (e) => e.email.toLowerCase() === targetEmail || e.name.toLowerCase().includes(targetEmail)
       );
 
       if (!emp) {
+        const notFoundMsg = `Employee with email/name '${input.email}' was not found.`;
+
+        // ❌ FAILURE AUDIT LOG (Employee Not Found)
+        await logAudit({
+          employee: targetEmail,
+          action: 'SEND_WELCOME_EMAIL',
+          system: 'Email Service',
+          status: 'FAILED',
+          details: notFoundMsg
+        });
+
         return {
           success: false,
-          message: `Employee with email/name '${input.email}' was not found.`,
+          message: notFoundMsg,
           data: { email: input.email, status: 'Failed' }
         };
       }
@@ -81,6 +82,15 @@ export class SendWelcomeEmailTool {
       emp.status = 'Active';
       await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
 
+      // ✅ SUCCESS AUDIT LOG
+      await logAudit({
+        employee: emp.email,
+        action: 'SEND_WELCOME_EMAIL',
+        system: 'Email Service',
+        status: 'SUCCESS',
+        details: `Welcome email sent. Employee status set to Active. Preview URL: ${previewUrl}`
+      });
+
       return {
         success: true,
         message: `Welcome email dispatched to ${emp.email}`,
@@ -93,6 +103,16 @@ export class SendWelcomeEmailTool {
       };
     } catch (error) {
       ctx.logger.error('Failed to send welcome email', { error: (error as Error).message });
+
+      // ❌ FAILURE AUDIT LOG (Exception)
+      await logAudit({
+        employee: targetEmail,
+        action: 'SEND_WELCOME_EMAIL',
+        system: 'Email Service',
+        status: 'FAILED',
+        details: (error as Error).message
+      });
+
       return {
         success: false,
         message: `Failed to send email: ${(error as Error).message}`,

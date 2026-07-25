@@ -1,6 +1,7 @@
 import { ToolDecorator as Tool, z, ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { getResourcePath } from '../utils.js';
+import { logAudit } from '../../utils/auditLogger.js'; // Added Audit Logger
 
 export interface Employee {
   id: string;
@@ -93,6 +94,15 @@ export class CreateEmployeeTool {
         name: input.name,
       });
 
+      // ✅ SUCCESS AUDIT LOG
+      await logAudit({
+        employee: email,
+        action: 'CREATE_EMPLOYEE',
+        system: 'HRIS / Internal DB',
+        status: 'SUCCESS',
+        details: `Created employee ${input.name} (${id}) with role ${input.role}`
+      });
+
       return {
         success: true,
         message: `Successfully created employee profile for ${input.name}`,
@@ -101,6 +111,15 @@ export class CreateEmployeeTool {
     } catch (error) {
       ctx.logger.error('Failed to create employee', {
         error: (error as Error).message,
+      });
+
+      // ❌ FAILURE AUDIT LOG
+      await logAudit({
+        employee: email,
+        action: 'CREATE_EMPLOYEE',
+        system: 'HRIS / Internal DB',
+        status: 'FAILED',
+        details: (error as Error).message
       });
 
       return {

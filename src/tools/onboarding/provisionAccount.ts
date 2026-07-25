@@ -1,6 +1,6 @@
 import { ExecutionContext } from '@nitrostack/core';
-import { readDB, writeDB } from '../utils/db.js';
-import { logAudit } from '../utils/auditLogger.js';
+import { readDB, writeDB } from '../../utils/db.js';
+import { logAudit } from '../../utils/auditLogger.js';
 
 interface ProvisionInput {
   email?: string;

@@ -9,9 +9,16 @@ export interface AuditLog {
   details?: string;
 }
 
+/**
+ * Log an audit event to `audit.json`.
+ *
+ * Safely appends to the existing array (readDB now guarantees a valid Array).
+ * Outputs a human-readable console message on success or errors on failure.
+ */
 export async function logAudit(entry: AuditLog): Promise<void> {
   try {
-    const logs = (await readDB('audit.json')) || [];
+    // readDB now always returns a valid Array (never null/undefined)
+    const logs: any[] = await readDB('audit.json');
 
     const newLog = {
       timestamp: new Date().toISOString(),
@@ -19,10 +26,14 @@ export async function logAudit(entry: AuditLog): Promise<void> {
     };
 
     logs.push(newLog);
-    await writeDB('audit.json', logs);
-    
-    console.log(`[AUDIT] ${newLog.action} | ${newLog.employee} | ${newLog.status}`);
+    const written = await writeDB('audit.json', logs);
+
+    if (written) {
+      console.log(`[AUDIT LOGGED] ${newLog.action} | ${newLog.employee} | ${newLog.status} | ${newLog.system}`);
+    } else {
+      console.error(`[AUDIT FAILED] Could not persist audit entry: ${newLog.action} | ${newLog.employee}`);
+    }
   } catch (error) {
-    console.error('CRITICAL: Failed to write to audit.json', error);
+    console.error('[AUDIT CRITICAL] Failed to write audit log entry:', error);
   }
-}s
+}

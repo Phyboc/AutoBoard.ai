@@ -1,25 +1,35 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-// This dynamically resolves the absolute path to your resources folder
-const getResourcePath = (filename: string) => path.join(process.cwd(), 'src', 'resources', filename);
+const RESOURCES_DIR = path.join(process.cwd(), 'src', 'resources');
 
-export async function readDB(filename: string) {
+function resolveDataPath(filename: string): string {
+  return path.join(RESOURCES_DIR, filename);
+}
+
+async function ensureDataDir(): Promise<void> {
+  await fs.mkdir(RESOURCES_DIR, { recursive: true });
+}
+
+export async function readDB(filename: string): Promise<any[]> {
   try {
-    const data = await fs.readFile(getResourcePath(filename), 'utf-8');
-    return JSON.parse(data);
+    await ensureDataDir();
+    const data = await fs.readFile(resolveDataPath(filename), 'utf-8');
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    console.error(`Failed to read ${filename}:`, error);
-    return null;
+    console.error(`[DB] Failed to read ${filename}:`, error);
+    return [];
   }
 }
 
-export async function writeDB(filename: string, data: any) {
+export async function writeDB(filename: string, data: any): Promise<boolean> {
   try {
-    await fs.writeFile(getResourcePath(filename), JSON.stringify(data, null, 2), 'utf-8');
+    await ensureDataDir();
+    await fs.writeFile(resolveDataPath(filename), JSON.stringify(data, null, 2), 'utf-8');
     return true;
   } catch (error) {
-    console.error(`Failed to write to ${filename}:`, error);
+    console.error(`[DB] Failed to write to ${filename}:`, error);
     return false;
   }
 }

@@ -1,6 +1,8 @@
 import { ToolDecorator as Tool, z, ExecutionContext } from '@nitrostack/core';
+import { readDB, writeDB } from '../../utils/db.js';
+import { logAudit } from '../../utils/auditLogger.js';
 
-// 1. Hackathon Mock Identity Database
+// Fallback Mock Identity Database
 export const mockUserDatabase = [
   {
     email: 'sarah@company.com',
@@ -31,19 +33,39 @@ export class RevokeAccountTool {
     input: { platform: string; email: string; confirm?: boolean },
     ctx: ExecutionContext
   ) {
+    const cleanEmail = (input.email || '').trim().toLowerCase();
+    const cleanPlatform = (input.platform || '').trim();
+
     // ==========================================
     // 1. BASIC VALIDATION GUARDS
     // ==========================================
-    if (!input.email || !input.email.includes('@')) {
-      throw new Error('Validation Error: Invalid email format. Must contain "@"');
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      const err = 'Validation Error: Invalid email format. Must contain "@"';
+
+      await logAudit({
+        employee: cleanEmail || 'UNKNOWN',
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform || 'System',
+        status: 'FAILED',
+        details: err,
+      });
+
+      throw new Error(err);
     }
 
-    if (!input.platform || !input.platform.trim()) {
-      throw new Error('Validation Error: Platform name cannot be empty.');
-    }
+    if (!cleanPlatform) {
+      const err = 'Validation Error: Platform name cannot be empty.';
 
-    const cleanEmail = input.email.trim().toLowerCase();
-    const cleanPlatform = input.platform.trim();
+      await logAudit({
+        employee: cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: 'Unknown Platform',
+        status: 'FAILED',
+        details: err,
+      });
+
+      throw new Error(err);
+    }
 
     // ==========================================
     // 2. CONFIRMATION SAFETY GUARD
@@ -52,6 +74,14 @@ export class RevokeAccountTool {
       ctx.logger.warn('Revocation halted: Confirmation required', {
         email: cleanEmail,
         platform: cleanPlatform,
+      });
+
+      await logAudit({
+        employee: cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform,
+        status: 'WAITING_CONFIRMATION',
+        details: `Revocation halted pending user confirmation for ${cleanPlatform}`,
       });
 
       return {
@@ -71,48 +101,96 @@ export class RevokeAccountTool {
       email: cleanEmail,
     });
 
-    // ==========================================
-    // 3. EXECUTION & STATE REVOCATION
-    // ==========================================
-    const user = mockUserDatabase.find((u) => u.email.toLowerCase() === cleanEmail);
+    try {
+      // ==========================================
+      // 3. EXECUTION & STATE REVOCATION
+      // ==========================================
+      const employees = (await readDB('employees.json')) || mockUserDatabase;
 
-    if (!user) {
-      const errorMsg = `User ${cleanEmail} not found in the employee directory.`;
-      ctx.logger.warn(errorMsg);
+      const user = employees.find(
+        (u: any) =>
+          u.email?.toLowerCase() === cleanEmail ||
+          u.id?.toLowerCase() === cleanEmail ||
+          u.name?.toLowerCase().includes(cleanEmail)
+      );
+
+      if (!user) {
+        const errorMsg = `User '${cleanEmail}' not found in the employee directory.`;
+        ctx.logger.warn(errorMsg);
+
+        // ❌ FAILURE AUDIT LOG (User Not Found)
+        await logAudit({
+          employee: cleanEmail,
+          action: 'REVOKE_ACCOUNT',
+          system: cleanPlatform,
+          status: 'FAILED',
+          details: errorMsg,
+        });
+
+        return {
+          success: false,
+          message: errorMsg,
+          data: null,
+        };
+      }
+
+      // Check both schema variants: provisionedAccounts and accounts
+      const accountsList: string[] = user.provisionedAccounts || user.accounts || [];
+
+      const accountIndex = accountsList.findIndex(
+        (acc) => acc.toLowerCase() === cleanPlatform.toLowerCase()
+      );
+
+      let wasRevoked = false;
+
+      if (accountIndex > -1) {
+        accountsList.splice(accountIndex, 1);
+        if (user.provisionedAccounts) user.provisionedAccounts = accountsList;
+        if (user.accounts) user.accounts = accountsList;
+        wasRevoked = true;
+
+        await writeDB('employees.json', employees);
+      }
+
+      const message = wasRevoked
+        ? `Successfully revoked ${cleanPlatform} access for ${cleanEmail}.`
+        : `No action taken. ${cleanEmail} did not have active access to ${cleanPlatform}.`;
+
+      ctx.logger.info(message);
+
+      // ✅ SUCCESS AUDIT LOG
+      await logAudit({
+        employee: user.email || cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform,
+        status: wasRevoked ? 'SUCCESS' : 'FAILED',
+        details: message,
+      });
+
       return {
-        success: false,
-        message: errorMsg,
-        data: null,
+        success: true,
+        message,
+        data: {
+          platform: cleanPlatform,
+          email: user.email || cleanEmail,
+          status: wasRevoked ? 'Revoked' : 'Not Provisioned',
+          remainingAccounts: accountsList,
+          fullUserState: user,
+        },
       };
+    } catch (error) {
+      ctx.logger.error('Failed to revoke account', { error: (error as Error).message });
+
+      // ❌ FAILURE AUDIT LOG (Exception)
+      await logAudit({
+        employee: cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform,
+        status: 'FAILED',
+        details: (error as Error).message,
+      });
+
+      throw error;
     }
-
-    const accountIndex = user.accounts.findIndex(
-      (acc) => acc.toLowerCase() === cleanPlatform.toLowerCase()
-    );
-
-    let wasRevoked = false;
-
-    if (accountIndex > -1) {
-      user.accounts.splice(accountIndex, 1);
-      wasRevoked = true;
-    }
-
-    const message = wasRevoked
-      ? `Successfully revoked ${cleanPlatform} access for ${cleanEmail}.`
-      : `No action taken. ${cleanEmail} did not have active access to ${cleanPlatform}.`;
-
-    ctx.logger.info(message);
-
-    return {
-      success: true,
-      message,
-      data: {
-        platform: cleanPlatform,
-        email: cleanEmail,
-        status: wasRevoked ? 'Revoked' : 'Not Provisioned',
-        remainingAccounts: user.accounts,
-        fullUserState: user,
-      },
-    };
   }
 }

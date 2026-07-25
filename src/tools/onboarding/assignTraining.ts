@@ -1,9 +1,8 @@
-// 
-
 import { ExecutionContext } from '@nitrostack/core';
 import { readFile, writeFile } from 'node:fs/promises';
 import { getResourcePath } from '../utils.js';
 import { Employee } from './createEmployee.js';
+import { logAudit } from '../../utils/auditLogger.js'; // Added Audit Logger
 
 interface AssignTrainingInput {
   email?: string;
@@ -18,20 +17,20 @@ export class AssignTrainingTool {
       moduleCount: input.modules?.length ?? 0 
     });
 
+    const identifier = (input.email || input.employeeId || '').toLowerCase();
+
+    if (!identifier) {
+      return {
+        success: false,
+        message: 'Either email or employeeId must be provided.',
+        data: { assigned: [] }
+      };
+    }
+
     try {
       const filePath = getResourcePath('employees.json');
       const fileData = await readFile(filePath, 'utf-8');
       const employees: Employee[] = JSON.parse(fileData);
-
-      const identifier = (input.email || input.employeeId || '').toLowerCase();
-
-      if (!identifier) {
-        return {
-          success: false,
-          message: 'Either email or employeeId must be provided.',
-          data: { assigned: [] }
-        };
-      }
 
       const emp = employees.find(
         (e) =>
@@ -41,9 +40,20 @@ export class AssignTrainingTool {
       );
 
       if (!emp) {
+        const notFoundMsg = `Employee matching '${identifier}' was not found.`;
+
+        // ❌ FAILURE AUDIT LOG (Employee Not Found)
+        await logAudit({
+          employee: identifier,
+          action: 'ASSIGN_TRAINING',
+          system: 'LMS / Training System',
+          status: 'FAILED',
+          details: notFoundMsg
+        });
+
         return {
           success: false,
-          message: `Employee matching '${identifier}' was not found.`,
+          message: notFoundMsg,
           data: { assigned: [] }
         };
       }
@@ -59,6 +69,15 @@ export class AssignTrainingTool {
 
       ctx.logger.info('Training modules successfully assigned', { employeeId: emp.id });
 
+      // ✅ SUCCESS AUDIT LOG
+      await logAudit({
+        employee: emp.email,
+        action: 'ASSIGN_TRAINING',
+        system: 'LMS / Training System',
+        status: 'SUCCESS',
+        details: `Assigned modules: ${modulesToAssign.join(', ')}`
+      });
+
       return {
         success: true,
         message: `Successfully assigned ${modulesToAssign.length} training module(s) to ${emp.name}`,
@@ -71,6 +90,16 @@ export class AssignTrainingTool {
       };
     } catch (error) {
       ctx.logger.error('Failed to assign training', { error: (error as Error).message });
+
+      // ❌ FAILURE AUDIT LOG (Exception)
+      await logAudit({
+        employee: identifier,
+        action: 'ASSIGN_TRAINING',
+        system: 'LMS / Training System',
+        status: 'FAILED',
+        details: (error as Error).message
+      });
+
       return {
         success: false,
         message: `Failed to assign training: ${(error as Error).message}`,

@@ -110,7 +110,8 @@
     "status": "Active",
     "provisionedAccounts": [
       "github",
-      "spotify"
+      "spotify",
+      "vercel"
     ],
     "assignedTraining": []
   },
@@ -120,6 +121,31 @@
     "email": "govind@gmail.com",
     "role": "Junior Frontend Developer",
     "startDate": "Monday",
+    "status": "Onboarding",
+    "provisionedAccounts": [
+      "github",
+      "SPOTIFY",
+      "vercel",
+      "firebase"
+    ],
+    "assignedTraining": []
+  },
+  {
+    "id": "emp-6941",
+    "name": "Govind",
+    "email": "govind@gmail.com",
+    "role": "Engineering Manager",
+    "startDate": "26-07-2026",
+    "status": "Onboarding",
+    "provisionedAccounts": [],
+    "assignedTraining": []
+  },
+  {
+    "id": "emp-9426",
+    "name": "samanyu",
+    "email": "samanyu@gmail.com",
+    "role": "Junior Software Developer",
+    "startDate": "2025-07-26",
     "status": "Onboarding",
     "provisionedAccounts": [],
     "assignedTraining": []

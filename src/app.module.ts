@@ -2,12 +2,13 @@ import { McpApp, Module, ConfigModule } from '@nitrostack/core';
 import { OnboardingModule } from './modules/onboarding/onboarding.module.js';
 import { OffboardingModule } from './modules/offboarding/offboarding.module.js';
 import { SystemModule } from './modules/system/system.module.js';
+import { AuditResourceProvider } from './resources/auditResource.js';
 
 /**
  * Root Application Module
  * 
  * This is the main module that bootstraps the MCP server.
- * It registers all feature modules and health checks.
+ * It registers all feature modules, resource providers, and health checks.
  */
 @McpApp({
   module: AppModule,
@@ -28,6 +29,8 @@ import { SystemModule } from './modules/system/system.module.js';
     OffboardingModule,
     SystemModule
   ],
-  providers: []
+  providers: [
+    AuditResourceProvider
+  ]
 })
 export class AppModule {}
