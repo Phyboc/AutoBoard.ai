@@ -1,20 +1,117 @@
 [
   {
-    "name": "Alex",
-    "email": "alex@company.com",
-    "role": "Engineering Manager",
-    "status": "Active"
-  },
-  {
-    "name": "Sarah",
-    "email": "sarah@company.com",
-    "role": "Junior Frontend Developer",
-    "status": "Pending"
-  },
-  {
-    "name": "Bob",
-    "email": "bob@company.com",
+    "id": "emp-1001",
+    "name": "Alex Rivera",
+    "email": "alex.rivera@company.com",
     "role": "Senior Backend Developer",
-    "status": "Active"
+    "startDate": "2023-03-15",
+    "status": "Active",
+    "provisionedAccounts": [
+      "GitHub",
+      "AWS",
+      "Datadog",
+      "Slack",
+      "1Password",
+      "Jira"
+    ],
+    "assignedTraining": [
+      "Security 101",
+      "Backend Architecture & Microservices"
+    ]
+  },
+  {
+    "id": "emp-1002",
+    "name": "Jordan Lee",
+    "email": "jordan.lee@company.com",
+    "role": "Product Designer",
+    "startDate": "2023-08-01",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Figma",
+      "Miro",
+      "Slack",
+      "1Password",
+      "Jira"
+    ],
+    "assignedTraining": [
+      "Security 101",
+      "Design System Overview"
+    ]
+  },
+  {
+    "id": "emp-1003",
+    "name": "Marcus Chen",
+    "email": "marcus.chen@company.com",
+    "role": "DevOps Engineer",
+    "startDate": "2022-11-10",
+    "status": "Active",
+    "provisionedAccounts": [
+      "GitHub",
+      "AWS",
+      "Datadog",
+      "PagerDuty",
+      "Terraform Cloud",
+      "Slack",
+      "1Password",
+      "Jira"
+    ],
+    "assignedTraining": [
+      "Security 101",
+      "Incident Response Protocol"
+    ]
+  },
+  {
+    "id": "emp-1004",
+    "name": "Sarah Miller",
+    "email": "sarah.miller@company.com",
+    "role": "Junior Frontend Developer",
+    "startDate": "2024-02-01",
+    "status": "Active",
+    "provisionedAccounts": [
+      "GitHub",
+      "Figma",
+      "Slack",
+      "1Password",
+      "Jira"
+    ],
+    "assignedTraining": [
+      "Security 101",
+      "Frontend Architecture Overview",
+      "Git Workflow"
+    ]
+  },
+  {
+    "id": "emp-1005",
+    "name": "Emily Watson",
+    "email": "emily.watson@company.com",
+    "role": "Engineering Manager",
+    "startDate": "2021-06-01",
+    "status": "Active",
+    "provisionedAccounts": [
+      "GitHub",
+      "AWS",
+      "Gusto",
+      "Lattice",
+      "Slack",
+      "1Password",
+      "Jira"
+    ],
+    "assignedTraining": [
+      "Security 101",
+      "Engineering Leadership Guide"
+    ]
+  },
+  {
+    "id": "emp-6880",
+    "name": "Sivasubramani ",
+    "email": "ad2623@gurukul.org",
+    "role": "CEO",
+    "startDate": "25-07-2026",
+    "status": "Onboarding",
+    "provisionedAccounts": [
+      "github",
+      "spotify"
+    ],
+    "assignedTraining": []
   }
 ]
