@@ -36,7 +36,15 @@ export class AssignTrainingTool {
       return {
         success: false,
         message: errMsg,
-        data: { assigned: [] }
+        data: { assigned: [] },
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: errMsg,
+            data: { assigned: [] }
+          }
+        }
       };
     }
 
@@ -66,7 +74,15 @@ export class AssignTrainingTool {
         return {
           success: false,
           message: notFoundMsg,
-          data: { assigned: [] }
+          data: { assigned: [] },
+          widget: {
+            name: 'OnboardingWidget',
+            props: {
+              success: false,
+              message: notFoundMsg,
+              data: { assigned: [] }
+            }
+          }
         };
       }
 
@@ -91,14 +107,24 @@ export class AssignTrainingTool {
         details: `Assigned modules: ${modulesToAssign.join(', ')}`
       });
 
+      const responseData = {
+        employeeId: emp.id,
+        name: emp.name,
+        email: emp.email,
+        modules: emp.assignedTraining
+      };
+
       return {
         success: true,
         message: `Successfully assigned ${modulesToAssign.length} training module(s) to ${emp.name}`,
-        data: {
-          employeeId: emp.id,
-          name: emp.name,
-          email: emp.email,
-          assigned: emp.assignedTraining
+        data: responseData,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: true,
+            message: `Successfully assigned ${modulesToAssign.length} training module(s) to ${emp.name}`,
+            data: responseData
+          }
         }
       };
     } catch (error) {
@@ -119,7 +145,15 @@ export class AssignTrainingTool {
       return {
         success: false,
         message: `Failed to assign training: ${errMsg}`,
-        data: { assigned: [] }
+        data: { assigned: [] },
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: `Failed to assign training: ${errMsg}`,
+            data: { assigned: [] }
+          }
+        }
       };
     }
   }

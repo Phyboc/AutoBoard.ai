@@ -37,7 +37,15 @@ export class ProvisionAccountTool {
       return {
         success: false,
         message: errMsg,
-        data: { provisioned: [] }
+        data: { provisioned: [] },
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: errMsg,
+            data: { provisioned: [] }
+          }
+        }
       };
     }
 
@@ -67,7 +75,15 @@ export class ProvisionAccountTool {
         return {
           success: false,
           message: notFoundMsg,
-          data: { provisioned: [] }
+          data: { provisioned: [] },
+          widget: {
+            name: 'OnboardingWidget',
+            props: {
+              success: false,
+              message: notFoundMsg,
+              data: { provisioned: [] }
+            }
+          }
         };
       }
 
@@ -82,10 +98,25 @@ export class ProvisionAccountTool {
         await tracker.addStep('Specify Software', 'FAILED', noItemMsg);
         await tracker.finishWorkflow();
 
+        const responseData = {
+          employeeId: emp.id,
+          name: emp.name,
+          email: emp.email,
+          provisioned: emp.provisionedAccounts || []
+        };
+
         return {
           success: false,
           message: noItemMsg,
-          data: { provisioned: emp.provisionedAccounts || [] }
+          data: responseData,
+          widget: {
+            name: 'OnboardingWidget',
+            props: {
+              success: false,
+              message: noItemMsg,
+              data: responseData
+            }
+          }
         };
       }
 
@@ -108,14 +139,24 @@ export class ProvisionAccountTool {
         details: `Provisioned accounts [${itemsToProvision.join(', ')}] for ${emp.name}`
       });
 
+      const responseData = {
+        employeeId: emp.id,
+        name: emp.name,
+        email: emp.email,
+        provisioned: emp.provisionedAccounts
+      };
+
       return {
         success: true,
         message: `Successfully provisioned [${itemsToProvision.join(', ')}] for ${emp.name}`,
-        data: {
-          employeeId: emp.id,
-          name: emp.name,
-          email: emp.email,
-          provisioned: emp.provisionedAccounts
+        data: responseData,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: true,
+            message: `Successfully provisioned [${itemsToProvision.join(', ')}] for ${emp.name}`,
+            data: responseData
+          }
         }
       };
     } catch (error) {
@@ -136,7 +177,15 @@ export class ProvisionAccountTool {
       return {
         success: false,
         message: `Failed to provision accounts: ${errMsg}`,
-        data: { provisioned: [] }
+        data: { provisioned: [] },
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: `Failed to provision accounts: ${errMsg}`,
+            data: { provisioned: [] }
+          }
+        }
       };
     }
   }

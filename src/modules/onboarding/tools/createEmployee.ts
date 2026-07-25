@@ -66,7 +66,15 @@ export class CreateEmployeeTool {
       return {
         success: true,
         message: `Successfully created employee profile for ${input.name}`,
-        data: newEmployee
+        data: newEmployee,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: true,
+            message: `Successfully created employee profile for ${input.name}`,
+            data: newEmployee
+          }
+        }
       };
     } catch (error) {
       const errMsg = (error as Error).message;
@@ -86,7 +94,15 @@ export class CreateEmployeeTool {
       return {
         success: false,
         message: `Failed to create employee profile: ${errMsg}`,
-        data: null
+        data: null,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: `Failed to create employee profile: ${errMsg}`,
+            data: null
+          }
+        }
       };
     }
   }
