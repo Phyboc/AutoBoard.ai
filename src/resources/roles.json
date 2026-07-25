@@ -1,0 +1,56 @@
+{
+  "Junior Frontend Developer": {
+    "software": [
+      "Google Workspace",
+      "Slack",
+      "GitHub",
+      "Jira"
+    ],
+    "training": [
+      "Security Training",
+      "Frontend Bootcamp"
+    ],
+    "channels": [
+      "#engineering",
+      "#frontend"
+    ]
+  },
+  "Engineering Manager": {
+    "software": [
+      "Google Workspace",
+      "Slack",
+      "GitHub",
+      "Jira",
+      "1Password",
+      "AWS Console"
+    ],
+    "training": [
+      "Security Training",
+      "Leadership Workshop",
+      "Compliance Training"
+    ],
+    "channels": [
+      "#engineering",
+      "#leadership",
+      "#general"
+    ]
+  },
+  "Senior Backend Developer": {
+    "software": [
+      "Google Workspace",
+      "Slack",
+      "GitHub",
+      "Jira",
+      "AWS Console",
+      "Datadog"
+    ],
+    "training": [
+      "Security Training",
+      "Backend Architecture Review"
+    ],
+    "channels": [
+      "#engineering",
+      "#backend"
+    ]
+  }
+}
