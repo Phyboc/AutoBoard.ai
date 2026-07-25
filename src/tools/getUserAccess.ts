@@ -1,21 +1,20 @@
 import { ExecutionContext } from '@nitrostack/core';
-import { readFile } from 'node:fs/promises';
-import { getResourcePath } from './utils';
+import { readDB } from '../utils/db';
 
 export class GetUserAccessTool {
 	async execute(input: { email: string }, ctx: ExecutionContext) {
 		ctx.logger.info('Fetching user access', { email: input.email });
 
-		// 1. Read and parse employees.json directly
-		let employees = [];
-		try {
-			const filePath = getResourcePath('employees.json');
-			const data = await readFile(filePath, 'utf-8');
-			employees = JSON.parse(data);
-		} catch (error) {
-			ctx.logger.error('Failed to read employees.json file', {
-				error: error instanceof Error ? error.message : String(error)
-			});
+		// 1. Read employees using the db utility
+		const employees = await readDB('employees.json');
+
+		if (!employees) {
+			ctx.logger.error('Failed to read employees.json file');
+			return {
+				success: false,
+				message: 'Failed to access database.',
+				data: { email: input.email, name: '', platforms: [] }
+			};
 		}
 
 		// 2. Find employee record
