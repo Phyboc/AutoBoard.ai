@@ -86,44 +86,44 @@ Learn more: [https://modelcontextprotocol.io](https://modelcontextprotocol.io)
 
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│ MCP Client (Claude, Cursor, etc.)                       │
+│ MCP Client (Claude, Cursor, etc.)                        │
 └────────────────────┬─────────────────────────────────────┘
                      │ MCP Protocol (HTTP SSE / STDIO)
                      ▼
 ┌──────────────────────────────────────────────────────────┐
 │ AutoBoard.ai MCP Server                                  │
 │                                                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌────────────────┐ │
-│  │ Onboarding   │  │ Offboarding  │  │ System Module  │ │
-│  │ Module       │  │ Module       │  │ (Health Check) │ │
-│  └──────┬───────┘  └──────┬───────┘  └────────────────┘ │
-│         │                 │                               │
-│         └──────────┬──────┘                               │
-│                    ▼                                      │
-│        ┌──────────────────────────────┐                   │
-│        │ Services Layer               │                   │
-│        │ onboardingWorkflow.ts        │                   │
-│        │ offboardingWorkflow.ts       │                   │
-│        └──────────────────────────────┘                   │
-│                    ▼                                      │
-│        ┌──────────────────────────────┐                   │
-│        │ Shared Utilities             │                   │
-│        │ DB · Audit · Execution ·     │                   │
-│        │ Permission checks            │                   │
-│        └──────────────────────────────┘                   │
-│                    ▼                                      │
-│        ┌──────────────────────────────┐                   │
-│        │ JSON Data Store              │                   │
-│        │ employees · roles · tickets  │                   │
-│        │ audit · execution            │                   │
-│        └──────────────────────────────┘                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────┐v │
+│  │ Onboarding   │  │ Offboarding  │  │ System Module  │  │
+│  │ Module       │  │ Module       │  │ (Health Check) │  │
+│  └──────┬───────┘  └──────┬───────┘  └────────────────┘  │
+│         │                 │                              │
+│         └──────────┬──────┘                              │
+│                    ▼                                     │
+│        ┌──────────────────────────────┐                  │
+│        │ Services Layer               │                  │
+│        │ onboardingWorkflow.ts        │                  │
+│        │ offboardingWorkflow.ts       │                  │
+│        └──────────────────────────────┘                  │
+│                    ▼                                     │
+│        ┌──────────────────────────────┐                  │
+│        │ Shared Utilities             │                  │
+│        │ DB · Audit · Execution ·     │                  │
+│        │ Permission checks            │                  │
+│        └──────────────────────────────┘                  │
+│                    ▼                                     │
+│        ┌──────────────────────────────┐                  │
+│        │ JSON Data Store              │                  │
+│        │ employees · roles · tickets  │                  │
+│        │ audit · execution            │                  │
+│        └──────────────────────────────┘                  │
 └──────────────────────────────────────────────────────────┘
                      │ Nitrostack Widget SDK
                      ▼
 ┌──────────────────────────────────────────────────────────┐
-│ Next.js Widget App (src/widgets)                        │
-│  • OnboardingWidget                                     │
-│  • OffboardingWidget                                    │
+│ Next.js Widget App (src/widgets)                         │
+│  • OnboardingWidget                                      │
+│  • OffboardingWidget                                     │
 └──────────────────────────────────────────────────────────┘
 ```
 
