@@ -4,6 +4,7 @@ import { CreateEmployeeTool } from './tools/createEmployee.js';
 import { ProvisionAccountTool } from './tools/provisionAccount.js';
 import { AssignTrainingTool } from './tools/assignTraining.js';
 import { SendWelcomeEmailTool } from './tools/sendWelcomeEmail.js';
+import { AssignTicketTool } from './tools/assignTicket.js';
 import { InitiateOnboardingTool } from '../../tools/onboarding/initiateOnboarding.js';
 import { UpdateOnboardingDraftTool } from '../../tools/onboarding/updateOnboardingDraft.js';
 
@@ -114,6 +115,19 @@ Updates the onboarding widget with new information and returns a refreshed check
   })
   async sendWelcomeEmail(input: { email: string }, ctx: ExecutionContext) {
     return new SendWelcomeEmailTool().execute(input, ctx);
+  }
+
+  @Tool({
+    name: 'assignTicket',
+    description: 'Assign a new task or ticket to an employee',
+    inputSchema: z.object({
+      email: z.string().email().describe('Company email address of the employee'),
+      title: z.string().describe('Title of the task or ticket'),
+      description: z.string().optional().describe('Optional detailed description of the task')
+    })
+  })
+  async assignTicket(input: { email: string; title: string; description?: string }, ctx: ExecutionContext) {
+    return new AssignTicketTool().execute(input, ctx);
   }
 
   @Tool({
