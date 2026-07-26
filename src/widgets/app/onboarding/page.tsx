@@ -31,22 +31,11 @@ export default function OnboardingWidget() {
     const msg = input.message || '';
     const success = input.success !== false;
 
-    // 1. Default / Explicit Checklist structure (Prioritize this if explicitly set)
-    if (data.actionType === 'GENERIC_PROGRESS' || (data.employeeName && Array.isArray(data.progress))) {
-      return {
-        actionType: 'GENERIC_PROGRESS',
-        employeeName: data.employeeName || data.name || 'New Hire',
-        items: data.progress.map((p: any) => ({ label: p.label, done: !!p.done })),
-        status: data.status || 'In Progress',
-        message: msg
-      };
-    }
-
-    // 2. Detect `createEmployee` tool output
+    // 1. Detect `createEmployee` tool output
     if (data.role || data.department || (data.id && data.name && !data.modules && !data.provisioned)) {
       return {
         actionType: 'CREATE_EMPLOYEE',
-        employeeName: data.employeeName || data.name || 'New Employee',
+        employeeName: data.name || 'New Employee',
         email: data.email,
         employeeId: data.id || data.employeeId,
         role: data.role || data.title,
@@ -65,7 +54,7 @@ export default function OnboardingWidget() {
       const modules: string[] = data.modules || data.trainingList || [];
       return {
         actionType: 'ASSIGN_TRAINING',
-        employeeName: data.employeeName || data.name || data.email || 'Employee',
+        employeeName: data.name || data.email || 'Employee',
         email: data.email,
         employeeId: data.employeeId,
         items: modules.length > 0 
@@ -81,13 +70,24 @@ export default function OnboardingWidget() {
       const provisioned: string[] = data.provisioned || [];
       return {
         actionType: 'PROVISION_ACCOUNT',
-        employeeName: data.employeeName || data.name || data.email || 'Employee',
+        employeeName: data.name || data.email || 'Employee',
         email: data.email,
         employeeId: data.employeeId,
         items: provisioned.length > 0
           ? provisioned.map((sys) => ({ label: `Access Granted: ${sys}`, done: true }))
           : [{ label: 'Account Provisioning', done: success }],
         status: success ? 'Completed' : 'In Progress',
+        message: msg
+      };
+    }
+
+    // 4. Default / Explicit Checklist structure
+    if (data.employeeName && Array.isArray(data.progress)) {
+      return {
+        actionType: 'GENERIC_PROGRESS',
+        employeeName: data.employeeName,
+        items: data.progress.map((p: any) => ({ label: p.label, done: !!p.done })),
+        status: data.status || 'In Progress',
         message: msg
       };
     }
