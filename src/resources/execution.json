@@ -789,5 +789,103 @@
     ],
     "startTime": "2026-07-26T04:54:17.875Z",
     "endTime": "2026-07-26T04:54:21.798Z"
+  },
+  {
+    "id": "exec-477899",
+    "type": "FETCH_ROLE_REQUIREMENTS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:47:57.902Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:47:57.899Z",
+    "endTime": "2026-07-26T06:47:57.905Z"
+  },
+  {
+    "id": "exec-477912",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:47:57.914Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:47:57.912Z",
+    "endTime": "2026-07-26T06:47:57.916Z"
+  },
+  {
+    "id": "exec-477922",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:47:57.924Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:47:57.922Z",
+    "endTime": "2026-07-26T06:47:57.926Z"
+  },
+  {
+    "id": "exec-477930",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:47:57.932Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:47:57.930Z",
+    "endTime": "2026-07-26T06:47:57.935Z"
+  },
+  {
+    "id": "exec-477938",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:47:57.939Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:47:57.938Z",
+    "endTime": "2026-07-26T06:47:57.941Z"
+  },
+  {
+    "id": "exec-477943",
+    "type": "SEND_WELCOME_EMAIL",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:48:03.737Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:47:57.943Z",
+    "endTime": "2026-07-26T06:48:03.739Z"
+  },
+  {
+    "id": "exec-197159",
+    "type": "ASSIGN_TASK",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Task",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T06:59:57.162Z"
+      }
+    ],
+    "startTime": "2026-07-26T06:59:57.159Z",
+    "endTime": "2026-07-26T06:59:57.169Z"
   }
 ]

@@ -52,7 +52,8 @@ export class EmployeeLifecyclePrompts {
 					`2. \`createEmployee\` - Register the new employee\n` +
 					`3. \`provisionAccount\` - Set up platform accounts\n` +
 					`4. \`assignTraining\` - Enroll in training modules\n` +
-					`5. \`sendWelcomeEmail\` - Send welcome instructions\n\n` +
+					`5. \`assignTask\` - Assign a new task or ticket to an employee\n` +
+					`6. \`sendWelcomeEmail\` - Send welcome instructions\n\n` +
 					`## Offboarding Workflow\n` +
 					`1. \`getUserAccess\` - View current platform access\n` +
 					`2. \`revokeAccount\` - Remove access from platforms\n` +

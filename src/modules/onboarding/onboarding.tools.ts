@@ -6,6 +6,7 @@ import { AssignTrainingTool } from './tools/assignTraining.js';
 import { SendWelcomeEmailTool } from './tools/sendWelcomeEmail.js';
 import { InitiateOnboardingTool } from '../../tools/onboarding/initiateOnboarding.js';
 import { UpdateOnboardingDraftTool } from '../../tools/onboarding/updateOnboardingDraft.js';
+import { AssignTaskTool } from './tools/assignTask.js';
 
 /**
  * Onboarding tool class that aggregates all employee onboarding tools.
@@ -107,13 +108,25 @@ Updates the onboarding widget with new information and returns a refreshed check
 
   @Tool({
     name: 'sendWelcomeEmail',
-    description: 'Send a welcome email to a newly onboarded employee',
+    description: 'Send a welcome email with onboarding instructions and credentials to the employee',
     inputSchema: z.object({
       email: z.string().email().describe('The company email of the employee')
     })
   })
   async sendWelcomeEmail(input: { email: string }, ctx: ExecutionContext) {
     return new SendWelcomeEmailTool().execute(input, ctx);
+  }
+
+  @Tool({
+    name: 'assignTask',
+    description: 'Assign a new task or ticket to an employee',
+    inputSchema: z.object({
+      email: z.string().email().describe('The company email of the employee'),
+      title: z.string().describe('The title of the task to assign')
+    })
+  })
+  async assignTask(input: { email: string; title: string }, ctx: ExecutionContext) {
+    return new AssignTaskTool().execute(input, ctx);
   }
 
   @Tool({

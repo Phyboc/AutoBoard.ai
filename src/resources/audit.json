@@ -414,5 +414,61 @@
     "system": "Email Service",
     "status": "SUCCESS",
     "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWS-nkibTVgVY27amWS.SLBEfRi4qq4AAAAARIie-9WE8KjoV3QEtgg9ts"
+  },
+  {
+    "timestamp": "2026-07-26T06:47:57.911Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: clerk"
+  },
+  {
+    "timestamp": "2026-07-26T06:47:57.920Z",
+    "employee": "raja@edug.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee raja (emp-7913) with role clerk"
+  },
+  {
+    "timestamp": "2026-07-26T06:47:57.929Z",
+    "employee": "raja@edug.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for raja"
+  },
+  {
+    "timestamp": "2026-07-26T06:47:57.937Z",
+    "employee": "raja@edug.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for raja"
+  },
+  {
+    "timestamp": "2026-07-26T06:47:57.942Z",
+    "employee": "raja@edug.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T06:48:03.741Z",
+    "employee": "raja@edug.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWtn3kibTVgWbnwamWto7cKjzKOMiKVAAAAAYff2qbOWHVDbZgvVxqMSWw"
+  },
+  {
+    "timestamp": "2026-07-26T06:59:57.171Z",
+    "employee": "ramu@hc.com",
+    "action": "ASSIGN_TASK",
+    "system": "Ticketing System",
+    "status": "SUCCESS",
+    "details": "Successfully assigned task 'sde1' (TKT-101) to ramu@hc.com."
   }
 ]

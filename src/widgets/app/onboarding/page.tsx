@@ -35,7 +35,7 @@ export default function OnboardingWidget() {
     if (data.role || data.department || (data.id && data.name && !data.modules && !data.provisioned)) {
       return {
         actionType: 'CREATE_EMPLOYEE',
-        employeeName: data.name || 'New Employee',
+        employeeName: data.name || data.employeeName || 'New Employee',
         email: data.email,
         employeeId: data.id || data.employeeId,
         role: data.role || data.title,

@@ -8,7 +8,7 @@ import { GetUserAccessTool } from '../../tools/offboarding/getUserAccess.js';
 import { RevokeAccountTool } from '../../tools/offboarding/revokeAccount.js';
 import { ReassignTicketsTool } from '../../tools/offboarding/reassignTickets.js';
 import { MarkEmployeeInactiveTool } from '../../tools/offboarding/markEmployeeInactive.js';
-
+import { AssignTaskTool } from '../../tools/onboarding/assignTask.js';
 /**
  * Composite tool class that aggregates all employee lifecycle tools.
  * Each method delegates to the corresponding standalone tool class.
@@ -112,12 +112,24 @@ export class EmployeeLifecycleTools {
 
 	@Tool({
 		name: 'markEmployeeInactive',
-		description: 'Mark an employee as inactive in the system during offboarding',
+		description: 'Mark an employee as inactive in the core HR system',
 		inputSchema: z.object({
-			email: z.string().email().describe('The company email of the employee to mark inactive')
+			email: z.string().email().describe('The company email of the employee')
 		})
 	})
 	async markEmployeeInactive(input: { email: string }, ctx: ExecutionContext) {
 		return new MarkEmployeeInactiveTool().execute(input, ctx);
+	}
+
+	@Tool({
+		name: 'assignTask',
+		description: 'Assign a new task or ticket to an employee',
+		inputSchema: z.object({
+			email: z.string().email().describe('The company email of the employee'),
+			title: z.string().describe('The title of the task to assign')
+		})
+	})
+	async assignTask(input: { email: string; title: string }, ctx: ExecutionContext) {
+		return new AssignTaskTool().execute(input, ctx);
 	}
 }

@@ -302,5 +302,61 @@
     "welcomeEmailSent": false,
     "_draft": true,
     "_createdAt": "2026-07-26T06:12:49.633Z"
+  },
+  {
+    "id": "draft-070577",
+    "name": "raju",
+    "email": "TBD",
+    "role": "TBD",
+    "startDate": "TBD",
+    "status": "Onboarding Draft",
+    "provisionedAccounts": [],
+    "assignedTraining": [],
+    "welcomeEmailSent": false,
+    "_draft": true,
+    "_createdAt": "2026-07-26T06:41:10.577Z"
+  },
+  {
+    "id": "emp-7913",
+    "name": "raja",
+    "email": "raja@edug.com",
+    "role": "clerk",
+    "startDate": "2025-11-11",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
+  },
+  {
+    "id": "draft-496654",
+    "name": "kumar",
+    "email": "TBD",
+    "role": "TBD",
+    "startDate": "TBD",
+    "status": "Onboarding Draft",
+    "provisionedAccounts": [],
+    "assignedTraining": [],
+    "welcomeEmailSent": false,
+    "_draft": true,
+    "_createdAt": "2026-07-26T06:48:16.654Z"
+  },
+  {
+    "id": "draft-912346",
+    "name": "ramu",
+    "email": "ramu@hc.com",
+    "role": "developer",
+    "startDate": "monday",
+    "status": "Onboarding Draft",
+    "provisionedAccounts": [],
+    "assignedTraining": [],
+    "welcomeEmailSent": false,
+    "_draft": true,
+    "_createdAt": "2026-07-26T06:55:12.346Z",
+    "_updatedAt": "2026-07-26T06:55:35.909Z"
   }
 ]
