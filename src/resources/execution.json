@@ -110,5 +110,432 @@
     ],
     "startTime": "2026-07-26T00:51:07.717Z",
     "endTime": "2026-07-26T00:51:07.735Z"
+  },
+  {
+    "id": "exec-692801",
+    "type": "FETCH_ROLE_REQUIREMENTS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.806Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:12.801Z",
+    "endTime": "2026-07-26T01:18:12.811Z"
+  },
+  {
+    "id": "exec-692799",
+    "type": "FULL_ONBOARDING_WORKFLOW",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.818Z"
+      },
+      {
+        "name": "Create Employee Profile",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.838Z"
+      },
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.859Z"
+      },
+      {
+        "name": "Assign Training Modules",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.880Z"
+      },
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.305Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:12.799Z",
+    "endTime": "2026-07-26T01:18:20.313Z"
+  },
+  {
+    "id": "exec-692822",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.828Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:12.822Z",
+    "endTime": "2026-07-26T01:18:12.832Z"
+  },
+  {
+    "id": "exec-692844",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.849Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:12.844Z",
+    "endTime": "2026-07-26T01:18:12.852Z"
+  },
+  {
+    "id": "exec-692864",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:12.868Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:12.864Z",
+    "endTime": "2026-07-26T01:18:12.872Z"
+  },
+  {
+    "id": "exec-692884",
+    "type": "SEND_WELCOME_EMAIL",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.282Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:12.884Z",
+    "endTime": "2026-07-26T01:18:20.288Z"
+  },
+  {
+    "id": "exec-700322",
+    "type": "GET_USER_ACCESS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Get User Access",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.327Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.322Z",
+    "endTime": "2026-07-26T01:18:20.331Z"
+  },
+  {
+    "id": "exec-700321",
+    "type": "FULL_OFFBOARDING_WORKFLOW",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch User Access",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.342Z"
+      },
+      {
+        "name": "Revoke Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.498Z"
+      },
+      {
+        "name": "Reassign Tickets",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.521Z"
+      },
+      {
+        "name": "Mark Employee Inactive",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.549Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.321Z",
+    "endTime": "2026-07-26T01:18:20.554Z"
+  },
+  {
+    "id": "exec-700347",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.355Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.347Z",
+    "endTime": "2026-07-26T01:18:20.360Z"
+  },
+  {
+    "id": "exec-700368",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.374Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.368Z",
+    "endTime": "2026-07-26T01:18:20.379Z"
+  },
+  {
+    "id": "exec-700391",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.414Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.391Z",
+    "endTime": "2026-07-26T01:18:20.422Z"
+  },
+  {
+    "id": "exec-700440",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.444Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.440Z",
+    "endTime": "2026-07-26T01:18:20.451Z"
+  },
+  {
+    "id": "exec-700458",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.465Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.458Z",
+    "endTime": "2026-07-26T01:18:20.470Z"
+  },
+  {
+    "id": "exec-700479",
+    "type": "REVOKE_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Revoke Account",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.485Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.479Z",
+    "endTime": "2026-07-26T01:18:20.490Z"
+  },
+  {
+    "id": "exec-700505",
+    "type": "REASSIGN_TICKETS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Reassign Tickets",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.508Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.505Z",
+    "endTime": "2026-07-26T01:18:20.512Z"
+  },
+  {
+    "id": "exec-700528",
+    "type": "MARK_EMPLOYEE_INACTIVE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Mark Employee Inactive",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:18:20.537Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:18:20.528Z",
+    "endTime": "2026-07-26T01:18:20.542Z"
+  },
+  {
+    "id": "exec-812463",
+    "type": "FETCH_ROLE_REQUIREMENTS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:20:12.465Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:20:12.463Z",
+    "endTime": "2026-07-26T01:20:12.469Z"
+  },
+  {
+    "id": "exec-812481",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:20:12.485Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:20:12.482Z",
+    "endTime": "2026-07-26T01:20:12.488Z"
+  },
+  {
+    "id": "exec-812496",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:20:12.499Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:20:12.496Z",
+    "endTime": "2026-07-26T01:20:12.502Z"
+  },
+  {
+    "id": "exec-812508",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:20:12.512Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:20:12.508Z",
+    "endTime": "2026-07-26T01:20:12.515Z"
+  },
+  {
+    "id": "exec-812521",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:20:12.525Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:20:12.521Z",
+    "endTime": "2026-07-26T01:20:12.529Z"
+  },
+  {
+    "id": "exec-812535",
+    "type": "SEND_WELCOME_EMAIL",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:20:17.905Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:20:12.535Z",
+    "endTime": "2026-07-26T01:20:17.908Z"
+  },
+  {
+    "id": "exec-382707",
+    "type": "FETCH_ROLE_REQUIREMENTS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:29:42.711Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:29:42.708Z",
+    "endTime": "2026-07-26T01:29:42.718Z"
+  },
+  {
+    "id": "exec-382725",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:29:42.728Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:29:42.725Z",
+    "endTime": "2026-07-26T01:29:42.731Z"
+  },
+  {
+    "id": "exec-382742",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:29:42.746Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:29:42.742Z",
+    "endTime": "2026-07-26T01:29:42.750Z"
+  },
+  {
+    "id": "exec-382759",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:29:42.761Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:29:42.759Z",
+    "endTime": "2026-07-26T01:29:42.764Z"
+  },
+  {
+    "id": "exec-382773",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:29:42.776Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:29:42.773Z",
+    "endTime": "2026-07-26T01:29:42.778Z"
+  },
+  {
+    "id": "exec-382787",
+    "type": "SEND_WELCOME_EMAIL",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T01:29:48.241Z"
+      }
+    ],
+    "startTime": "2026-07-26T01:29:42.787Z",
+    "endTime": "2026-07-26T01:29:48.246Z"
   }
 ]

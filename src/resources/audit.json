@@ -62,5 +62,213 @@
     "system": "HRIS / Internal DB",
     "status": "SUCCESS",
     "details": "Created employee big joe (emp-7721) with role big guy"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:12.816Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: Senior Backend Developer"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:12.836Z",
+    "employee": "sarah.connor@company.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Sarah Connor (emp-2825) with role Senior Backend Developer"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:12.857Z",
+    "employee": "sarah.connor@company.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace, Slack, GitHub, Jira, AWS Console, Datadog",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace, Slack, GitHub, Jira, AWS Console, Datadog] for Sarah Connor"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:12.878Z",
+    "employee": "sarah.connor@company.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training, Backend Architecture Review"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.299Z",
+    "employee": "sarah.connor@company.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amVgVnkibTVgTFuJamVgXKh0HEC2Pu-BAAAAAY6LdbMyZ6zZTIgKnwllxC4"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.339Z",
+    "employee": "sarah.connor@company.com",
+    "action": "GET_USER_ACCESS",
+    "system": "Identity Provider",
+    "status": "SUCCESS",
+    "details": "Retrieved 6 active platform(s) for Sarah Connor"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.365Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Successfully revoked Google Workspace access for sarah.connor@company.com."
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.388Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Successfully revoked Slack access for sarah.connor@company.com."
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.438Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "GitHub",
+    "status": "SUCCESS",
+    "details": "Successfully revoked GitHub access for sarah.connor@company.com."
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.456Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "Jira",
+    "status": "SUCCESS",
+    "details": "Successfully revoked Jira access for sarah.connor@company.com."
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.478Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "AWS Console",
+    "status": "SUCCESS",
+    "details": "Successfully revoked AWS Console access for sarah.connor@company.com."
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.496Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "Datadog",
+    "status": "SUCCESS",
+    "details": "Successfully revoked Datadog access for sarah.connor@company.com."
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.519Z",
+    "employee": "sarah.connor@company.com",
+    "action": "REASSIGN_TICKETS",
+    "system": "Ticketing System",
+    "status": "SUCCESS",
+    "details": "Reassigned 0 ticket(s) [] to alex@company.com"
+  },
+  {
+    "timestamp": "2026-07-26T01:18:20.548Z",
+    "employee": "sarah.connor@company.com",
+    "action": "MARK_EMPLOYEE_INACTIVE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Updated employee status for Sarah Connor (emp-2825) to Offboarded"
+  },
+  {
+    "timestamp": "2026-07-26T01:20:12.478Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: General Manager"
+  },
+  {
+    "timestamp": "2026-07-26T01:20:12.493Z",
+    "employee": "akhilan@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Akhilan (emp-2483) with role General Manager"
+  },
+  {
+    "timestamp": "2026-07-26T01:20:12.506Z",
+    "employee": "akhilan@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Akhilan"
+  },
+  {
+    "timestamp": "2026-07-26T01:20:12.519Z",
+    "employee": "akhilan@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Akhilan"
+  },
+  {
+    "timestamp": "2026-07-26T01:20:12.533Z",
+    "employee": "akhilan@gmail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T01:20:17.911Z",
+    "employee": "akhilan@gmail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amVgznkibTVgTHc4amVg0iLBEfRi4YZaAAAAAZZ4EC29fzques65tOzk2Tk"
+  },
+  {
+    "timestamp": "2026-07-26T01:29:42.724Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: team head"
+  },
+  {
+    "timestamp": "2026-07-26T01:29:42.740Z",
+    "employee": "adwit@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee adwit (emp-2727) with role team head"
+  },
+  {
+    "timestamp": "2026-07-26T01:29:42.757Z",
+    "employee": "adwit@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for adwit"
+  },
+  {
+    "timestamp": "2026-07-26T01:29:42.771Z",
+    "employee": "adwit@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for adwit"
+  },
+  {
+    "timestamp": "2026-07-26T01:29:42.783Z",
+    "employee": "adwit@gmail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Basics"
+  },
+  {
+    "timestamp": "2026-07-26T01:29:48.253Z",
+    "employee": "adwit@gmail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amVjCHkibTVgTNWvamVjDKh0HEC2PvzXAAAAARy403P8oFhe5spxu5XmQ4s"
   }
 ]

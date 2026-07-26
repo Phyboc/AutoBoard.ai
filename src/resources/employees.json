@@ -195,5 +195,51 @@
     "status": "Onboarding",
     "provisionedAccounts": [],
     "assignedTraining": []
+  },
+  {
+    "id": "emp-2825",
+    "name": "Sarah Connor",
+    "email": "sarah.connor@company.com",
+    "role": "Senior Backend Developer",
+    "startDate": "2026-08-15",
+    "status": "Offboarded",
+    "provisionedAccounts": [],
+    "assignedTraining": [
+      "Security Training",
+      "Backend Architecture Review"
+    ],
+    "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-2483",
+    "name": "Akhilan",
+    "email": "akhilan@gmail.com",
+    "role": "General Manager",
+    "startDate": "2025-07-26",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-2727",
+    "name": "adwit",
+    "email": "adwit@gmail.com",
+    "role": "team head",
+    "startDate": "2026-07-26",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Basics"
+    ],
+    "welcomeEmailSent": true
   }
 ]
