@@ -70,4 +70,42 @@ export class OnboardingTools {
   async sendWelcomeEmail(input: { email: string }, ctx: ExecutionContext) {
     return new SendWelcomeEmailTool().execute(input, ctx);
   }
+
+  @Tool({
+    name: 'onboardEmployee',
+    description: 'Complete end-to-end employee onboarding workflow (creates profile, provisions accounts, assigns training, and sends welcome email)',
+    inputSchema: z.object({
+      name: z.string().describe('Full name of the employee'),
+      email: z.string().email().describe('Company email address'),
+      role: z.string().describe('Job role/title'),
+      startDate: z.string().describe('Start date (e.g. "Monday" or "2025-01-15")')
+    })
+  })
+  async onboardEmployee(input: { name: string; email: string; role: string; startDate: string }, ctx: ExecutionContext) {
+    const reqs = await new FetchRoleRequirementsTool().execute({ role: input.role }, ctx);
+    const emp = await new CreateEmployeeTool().execute(input, ctx);
+
+    const reqData = reqs.data || { software: [], training: [], channels: [] };
+    const platforms: string[] = reqData.software || [];
+    for (const platform of platforms) {
+      await new ProvisionAccountTool().execute({ platform, email: input.email }, ctx);
+    }
+
+    const trainingModules: string[] = reqData.training || [];
+    if (trainingModules.length > 0) {
+      await new AssignTrainingTool().execute({ email: input.email, modules: trainingModules }, ctx);
+    }
+
+    await new SendWelcomeEmailTool().execute({ email: input.email }, ctx);
+
+    return {
+      success: true,
+      message: `Successfully onboarded ${input.name} (${input.email})`,
+      data: {
+        employee: emp.data,
+        provisionedPlatforms: platforms,
+        assignedTraining: trainingModules
+      }
+    };
+  }
 }

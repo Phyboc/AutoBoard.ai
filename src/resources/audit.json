@@ -54,5 +54,13 @@
     "system": "HRIS / Internal DB",
     "status": "SUCCESS",
     "details": "Created employee Jane Doe (emp-1896) with role Junior Frontend Developer"
+  },
+  {
+    "timestamp": "2026-07-26T00:51:07.742Z",
+    "employee": "bigjoe@bigcorp.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee big joe (emp-7721) with role big guy"
   }
 ]

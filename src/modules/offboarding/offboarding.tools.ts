@@ -58,4 +58,34 @@ export class OffboardingTools {
   async markEmployeeInactive(input: { email: string }, ctx: ExecutionContext) {
     return new MarkEmployeeInactiveTool().execute(input, ctx);
   }
+
+  @Tool({
+    name: 'offboardEmployee',
+    description: 'Complete end-to-end employee offboarding workflow (fetches access, revokes accounts, reassigns tickets, and marks inactive)',
+    inputSchema: z.object({
+      email: z.string().email().describe('The email of the employee to offboard'),
+      reassignEmail: z.string().email().describe('The email of the employee taking over tickets')
+    })
+  })
+  @UseGuards(AdminGuard)
+  async offboardEmployee(input: { email: string; reassignEmail: string }, ctx: ExecutionContext) {
+    const access = await new GetUserAccessTool().execute({ email: input.email }, ctx);
+    const platforms: string[] = access.data?.platforms || [];
+
+    for (const platform of platforms) {
+      await new RevokeAccountTool().execute({ platform, email: input.email }, ctx);
+    }
+
+    await new ReassignTicketsTool().execute({ oldEmail: input.email, newEmail: input.reassignEmail }, ctx);
+    await new MarkEmployeeInactiveTool().execute({ email: input.email }, ctx);
+
+    return {
+      success: true,
+      message: `Successfully offboarded ${input.email}`,
+      data: {
+        revokedPlatforms: platforms,
+        reassignedTo: input.reassignEmail
+      }
+    };
+  }
 }
