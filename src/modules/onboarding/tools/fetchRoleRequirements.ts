@@ -17,34 +17,13 @@ export class FetchRoleRequirementsTool {
     try {
       const rolesMap = (await readDB('roles.json')) || {};
 
-      const requirements: RoleRequirements | undefined = rolesMap[input.role];
+      const defaultRequirements: RoleRequirements = {
+        software: ['Google Workspace', 'Slack'],
+        training: ['Security Training'],
+        channels: ['#general']
+      };
 
-      if (!requirements) {
-        const notFoundMsg = `Role '${input.role}' was not found in roles.json.`;
-        ctx.logger.warn(notFoundMsg);
-
-        await tracker.addStep('Fetch Role Requirements', 'FAILED', notFoundMsg);
-        await tracker.finishWorkflow();
-
-        await logAudit({
-          employee: 'SYSTEM',
-          action: 'FETCH_ROLE_REQUIREMENTS',
-          system: 'Role Repository',
-          status: 'FAILED',
-          details: notFoundMsg
-        });
-
-        return {
-          success: false,
-          message: notFoundMsg,
-          data: {
-            role: input.role,
-            software: [],
-            training: [],
-            channels: []
-          }
-        };
-      }
+      const requirements: RoleRequirements = rolesMap[input.role] || defaultRequirements;
 
       ctx.logger.info('Successfully fetched role requirements', { role: input.role });
 

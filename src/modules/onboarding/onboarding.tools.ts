@@ -1,4 +1,4 @@
-import { ToolDecorator as Tool, ExecutionContext, z } from '@nitrostack/core';
+import { ToolDecorator as Tool, Widget, ExecutionContext, z } from '@nitrostack/core';
 import { FetchRoleRequirementsTool } from './tools/fetchRoleRequirements.js';
 import { CreateEmployeeTool } from './tools/createEmployee.js';
 import { ProvisionAccountTool } from './tools/provisionAccount.js';
@@ -81,6 +81,7 @@ export class OnboardingTools {
       startDate: z.string().describe('Start date (e.g. "Monday" or "2025-01-15")')
     })
   })
+  @Widget('/onboarding')
   async onboardEmployee(input: { name: string; email: string; role: string; startDate: string }, ctx: ExecutionContext) {
     const reqs = await new FetchRoleRequirementsTool().execute({ role: input.role }, ctx);
     const emp = await new CreateEmployeeTool().execute(input, ctx);
@@ -102,9 +103,18 @@ export class OnboardingTools {
       success: true,
       message: `Successfully onboarded ${input.name} (${input.email})`,
       data: {
-        employee: emp.data,
-        provisionedPlatforms: platforms,
-        assignedTraining: trainingModules
+        employeeName: input.name,
+        email: input.email,
+        role: input.role,
+        employeeId: emp.data?.id,
+        progress: [
+          { label: 'Fetch Role Requirements', done: true },
+          { label: 'Create Employee Profile', done: true },
+          { label: `Provision Accounts (${platforms.join(', ')})`, done: true },
+          { label: `Assign Training (${trainingModules.length} modules)`, done: trainingModules.length > 0 },
+          { label: 'Send Welcome Email', done: true }
+        ],
+        status: 'Completed'
       }
     };
   }

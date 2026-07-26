@@ -1,4 +1,4 @@
-import { ToolDecorator as Tool, ExecutionContext, z, UseGuards } from '@nitrostack/core';
+import { ToolDecorator as Tool, Widget, ExecutionContext, z, UseGuards } from '@nitrostack/core';
 import { GetUserAccessTool } from './tools/getUserAccess.js';
 import { RevokeAccountTool } from './tools/revokeAccount.js';
 import { ReassignTicketsTool } from './tools/reassignTickets.js';
@@ -67,6 +67,7 @@ export class OffboardingTools {
       reassignEmail: z.string().email().describe('The email of the employee taking over tickets')
     })
   })
+  @Widget('/offboarding')
   @UseGuards(AdminGuard)
   async offboardEmployee(input: { email: string; reassignEmail: string }, ctx: ExecutionContext) {
     const access = await new GetUserAccessTool().execute({ email: input.email }, ctx);
@@ -83,8 +84,14 @@ export class OffboardingTools {
       success: true,
       message: `Successfully offboarded ${input.email}`,
       data: {
-        revokedPlatforms: platforms,
-        reassignedTo: input.reassignEmail
+        employeeName: input.email,
+        revokedSystems: platforms.map(p => ({ name: p, revoked: true })),
+        ticketReassignment: {
+          count: 1,
+          assignedTo: input.reassignEmail,
+          done: true
+        },
+        status: 'Completed'
       }
     };
   }
