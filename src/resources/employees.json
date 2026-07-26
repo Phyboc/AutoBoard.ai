@@ -289,5 +289,18 @@
       "Security Training"
     ],
     "welcomeEmailSent": true
+  },
+  {
+    "id": "draft-369633",
+    "name": "Rakesh",
+    "email": "rakesh@h.com",
+    "role": "hr clerk",
+    "startDate": "2020-12-17",
+    "status": "Onboarding Draft",
+    "provisionedAccounts": [],
+    "assignedTraining": [],
+    "welcomeEmailSent": false,
+    "_draft": true,
+    "_createdAt": "2026-07-26T06:12:49.633Z"
   }
 ]
