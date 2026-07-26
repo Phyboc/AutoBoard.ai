@@ -566,5 +566,101 @@
     "system": "HRIS / Internal DB",
     "status": "SUCCESS",
     "details": "Updated employee status for Jeremiah (emp-9087) to Offboarded"
+  },
+  {
+    "timestamp": "2026-07-26T07:26:43.862Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: developer"
+  },
+  {
+    "timestamp": "2026-07-26T07:26:43.875Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee babulimass (emp-3865) with role developer"
+  },
+  {
+    "timestamp": "2026-07-26T07:26:43.887Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Sivasubramani "
+  },
+  {
+    "timestamp": "2026-07-26T07:26:43.896Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Sivasubramani "
+  },
+  {
+    "timestamp": "2026-07-26T07:26:43.902Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T07:26:45.441Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Resend",
+    "status": "SUCCESS",
+    "details": "Email delivered to demo inbox (babulimass2ak47@gmail.com). Employee status updated to Active. Message ID: N/A"
+  },
+  {
+    "timestamp": "2026-07-26T07:28:38.921Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: dev"
+  },
+  {
+    "timestamp": "2026-07-26T07:28:38.942Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee kist (emp-8926) with role dev"
+  },
+  {
+    "timestamp": "2026-07-26T07:28:38.954Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Sivasubramani "
+  },
+  {
+    "timestamp": "2026-07-26T07:28:38.961Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Sivasubramani "
+  },
+  {
+    "timestamp": "2026-07-26T07:28:38.968Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T07:28:40.563Z",
+    "employee": "babulimass2ak47@gmail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Resend",
+    "status": "SUCCESS",
+    "details": "Email delivered to demo inbox (babulimass2ak47@gmail.com). Employee status updated to Active. Message ID: N/A"
   }
 ]

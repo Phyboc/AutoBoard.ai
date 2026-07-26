@@ -111,9 +111,14 @@
     "provisionedAccounts": [
       "github",
       "spotify",
-      "vercel"
+      "vercel",
+      "Google Workspace",
+      "Slack"
     ],
-    "assignedTraining": []
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
   },
   {
     "id": "emp-7504",
@@ -371,5 +376,25 @@
       "Security Training"
     ],
     "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-3865",
+    "name": "babulimass",
+    "email": "babulimass2ak47@gmail.com",
+    "role": "developer",
+    "startDate": "Friday",
+    "status": "Onboarding",
+    "provisionedAccounts": [],
+    "assignedTraining": []
+  },
+  {
+    "id": "emp-8926",
+    "name": "kist",
+    "email": "babulimass2ak47@gmail.com",
+    "role": "dev",
+    "startDate": "Friday",
+    "status": "Onboarding",
+    "provisionedAccounts": [],
+    "assignedTraining": []
   }
 ]
