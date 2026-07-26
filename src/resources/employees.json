@@ -358,5 +358,18 @@
     "_draft": true,
     "_createdAt": "2026-07-26T06:55:12.346Z",
     "_updatedAt": "2026-07-26T06:55:35.909Z"
+  },
+  {
+    "id": "emp-9087",
+    "name": "Jeremiah",
+    "email": "jeri@mail.com",
+    "role": "Dev",
+    "startDate": "Friday",
+    "status": "Offboarded",
+    "provisionedAccounts": [],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
   }
 ]

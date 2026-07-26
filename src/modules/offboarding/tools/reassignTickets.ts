@@ -2,6 +2,7 @@ import { ExecutionContext } from '@nitrostack/core';
 import { readDB, writeDB } from '../../../utils/db.js';
 import { logAudit } from '../../../utils/auditLogger.js';
 import { ExecutionTracker } from '../../../utils/executionTracker.js';
+import { requireConfirmation } from '../../../utils/permissionCheck.js';
 
 const mockTicketDatabase = [
   { id: "TKT-101", title: "Update Navbar CSS", assignee: "sarah@company.com", status: "In Progress" },
@@ -11,7 +12,18 @@ const mockTicketDatabase = [
 ];
 
 export class ReassignTicketsTool {
-  async execute(input: { oldEmail: string; newEmail: string }, ctx: ExecutionContext) {
+  async execute(input: { oldEmail: string; newEmail: string; confirm?: boolean }, ctx: ExecutionContext) {
+    // Confirmation guard: ask once before reassigning tickets
+    const confirmation = requireConfirmation(input, ctx, `reassign tickets from ${input.oldEmail} to ${input.newEmail}`);
+    if (!confirmation.confirmed) {
+      ctx.logger.info(`[reassignTickets] Confirmation required for ${input.oldEmail} — operating as ${confirmation.role}`);
+      return {
+        success: false,
+        message: confirmation.message,
+        data: null
+      };
+    }
+
     const tracker = new ExecutionTracker('REASSIGN_TICKETS');
     const cleanOldEmail = (input.oldEmail || '').trim().toLowerCase();
     const cleanNewEmail = (input.newEmail || '').trim().toLowerCase();

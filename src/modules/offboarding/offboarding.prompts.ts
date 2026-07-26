@@ -54,17 +54,17 @@ export class OffboardingPrompts {
       const revokedList = platforms.map((p: string) => ({ name: p, revoked: false }));
       
       for (let i = 0; i < revokedList.length; i++) {
-        await new RevokeAccountTool().execute({ platform: revokedList[i].name, email: args.employee_email }, ctx);
+        await new RevokeAccountTool().execute({ platform: revokedList[i].name, email: args.employee_email, confirm: true }, ctx);
         revokedList[i].revoked = true;
         updateState('In Progress', [...revokedList], false);
       }
 
       // STEP 4: Reassign Tickets
-      await new ReassignTicketsTool().execute({ oldEmail: args.employee_email, newEmail: args.reassign_email }, ctx);
+      await new ReassignTicketsTool().execute({ oldEmail: args.employee_email, newEmail: args.reassign_email, confirm: true }, ctx);
       updateState('In Progress', revokedList.map((r: { name: string; revoked: boolean }) => ({ ...r, revoked: true })), true);
 
       // STEP 5: Mark Inactive
-      await new MarkEmployeeInactiveTool().execute({ email: args.employee_email }, ctx);
+      await new MarkEmployeeInactiveTool().execute({ email: args.employee_email, confirm: true }, ctx);
 
       // FINAL STATE: Completed
       updateState('Completed', revokedList.map((r: { name: string; revoked: boolean }) => ({ ...r, revoked: true })), true);

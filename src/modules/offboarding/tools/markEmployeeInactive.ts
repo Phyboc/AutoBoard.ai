@@ -2,13 +2,26 @@ import { ExecutionContext } from '@nitrostack/core';
 import { readDB, writeDB } from '../../../utils/db.js';
 import { logAudit } from '../../../utils/auditLogger.js';
 import { ExecutionTracker } from '../../../utils/executionTracker.js';
+import { requireConfirmation } from '../../../utils/permissionCheck.js';
 
 interface MarkInactiveInput {
   email: string;
+  confirm?: boolean;
 }
 
 export class MarkEmployeeInactiveTool {
   async execute(input: MarkInactiveInput, ctx: ExecutionContext) {
+    // Confirmation guard: ask once before marking employee inactive
+    const confirmation = requireConfirmation(input, ctx, `mark ${input.email} as inactive (offboarded)`);
+    if (!confirmation.confirmed) {
+      ctx.logger.info(`[markEmployeeInactive] Confirmation required for ${input.email} — operating as ${confirmation.role}`);
+      return {
+        success: false,
+        message: confirmation.message,
+        data: null
+      };
+    }
+
     const tracker = new ExecutionTracker('MARK_EMPLOYEE_INACTIVE');
     ctx.logger.info('Marking employee inactive', { email: input.email });
 

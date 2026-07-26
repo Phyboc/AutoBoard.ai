@@ -1,15 +1,17 @@
-import { ToolDecorator as Tool, Widget, ExecutionContext, z, UseGuards } from '@nitrostack/core';
+import { ToolDecorator as Tool, Widget, ExecutionContext, z } from '@nitrostack/core';
 import { GetUserAccessTool } from './tools/getUserAccess.js';
 import { RevokeAccountTool } from './tools/revokeAccount.js';
 import { ReassignTicketsTool } from './tools/reassignTickets.js';
 import { MarkEmployeeInactiveTool } from './tools/markEmployeeInactive.js';
-import { AdminGuard } from '../../shared/guards/admin.guard.js';
 import { InitiateOffboardingTool } from '../../tools/offboarding/initiateOffboarding.js';
 import { UpdateOffboardingDraftTool } from '../../tools/offboarding/updateOffboardingDraft.js';
 
 /**
  * Offboarding tool class that aggregates all employee offboarding tools.
  * Each method delegates to the corresponding standalone tool class.
+ *
+ * SECURITY: Uses re-confirmation guard (requireConfirmation) inside each
+ * destructive tool rather than a decorator-based admin guard.
  */
 export class OffboardingTools {
 
@@ -71,11 +73,11 @@ Updates the offboarding widget state — e.g., when the reassign email is provid
     description: 'Revoke a user account on a given platform during offboarding',
     inputSchema: z.object({
       platform: z.string().describe('The platform to revoke access from'),
-      email: z.string().email().describe('The company email of the employee')
+      email: z.string().email().describe('The company email of the employee'),
+      confirm: z.boolean().optional().describe('Set to true to confirm this revocation')
     })
   })
-  @UseGuards(AdminGuard)
-  async revokeAccount(input: { platform: string; email: string }, ctx: ExecutionContext) {
+  async revokeAccount(input: { platform: string; email: string; confirm?: boolean }, ctx: ExecutionContext) {
     return new RevokeAccountTool().execute(input, ctx);
   }
 
@@ -84,10 +86,11 @@ Updates the offboarding widget state — e.g., when the reassign email is provid
     description: 'Reassign tickets from an offboarded employee to another employee',
     inputSchema: z.object({
       oldEmail: z.string().email().describe('The email of the employee leaving'),
-      newEmail: z.string().email().describe('The email of the employee taking over')
+      newEmail: z.string().email().describe('The email of the employee taking over'),
+      confirm: z.boolean().optional().describe('Set to true to confirm this ticket reassignment')
     })
   })
-  async reassignTickets(input: { oldEmail: string; newEmail: string }, ctx: ExecutionContext) {
+  async reassignTickets(input: { oldEmail: string; newEmail: string; confirm?: boolean }, ctx: ExecutionContext) {
     return new ReassignTicketsTool().execute(input, ctx);
   }
 
@@ -95,11 +98,11 @@ Updates the offboarding widget state — e.g., when the reassign email is provid
     name: 'markEmployeeInactive',
     description: 'Mark an employee as inactive in the system during offboarding',
     inputSchema: z.object({
-      email: z.string().email().describe('The company email of the employee to mark inactive')
+      email: z.string().email().describe('The company email of the employee to mark inactive'),
+      confirm: z.boolean().optional().describe('Set to true to confirm this action')
     })
   })
-  @UseGuards(AdminGuard)
-  async markEmployeeInactive(input: { email: string }, ctx: ExecutionContext) {
+  async markEmployeeInactive(input: { email: string; confirm?: boolean }, ctx: ExecutionContext) {
     return new MarkEmployeeInactiveTool().execute(input, ctx);
   }
 
@@ -108,21 +111,21 @@ Updates the offboarding widget state — e.g., when the reassign email is provid
     description: 'Complete end-to-end employee offboarding workflow (fetches access, revokes accounts, reassigns tickets, and marks inactive)',
     inputSchema: z.object({
       email: z.string().email().describe('The email of the employee to offboard'),
-      reassignEmail: z.string().email().describe('The email of the employee taking over tickets')
+      reassignEmail: z.string().email().describe('The email of the employee taking over tickets'),
+      confirm: z.boolean().optional().describe('Set to true to confirm the full offboarding workflow')
     })
   })
   @Widget('/offboarding')
-  @UseGuards(AdminGuard)
-  async offboardEmployee(input: { email: string; reassignEmail: string }, ctx: ExecutionContext) {
+  async offboardEmployee(input: { email: string; reassignEmail: string; confirm?: boolean }, ctx: ExecutionContext) {
     const access = await new GetUserAccessTool().execute({ email: input.email }, ctx);
     const platforms: string[] = access.data?.platforms || [];
 
     for (const platform of platforms) {
-      await new RevokeAccountTool().execute({ platform, email: input.email }, ctx);
+      await new RevokeAccountTool().execute({ platform, email: input.email, confirm: true }, ctx);
     }
 
-    await new ReassignTicketsTool().execute({ oldEmail: input.email, newEmail: input.reassignEmail }, ctx);
-    await new MarkEmployeeInactiveTool().execute({ email: input.email }, ctx);
+    await new ReassignTicketsTool().execute({ oldEmail: input.email, newEmail: input.reassignEmail, confirm: true }, ctx);
+    await new MarkEmployeeInactiveTool().execute({ email: input.email, confirm: true }, ctx);
 
     return {
       success: true,

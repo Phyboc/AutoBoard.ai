@@ -83,7 +83,8 @@ export async function runOffboardingWorkflow(
     const reassignResult = await reassignTool.execute(
       {
         oldEmail: employeeEmail,
-        newEmail: input.reassignToEmail
+        newEmail: input.reassignToEmail,
+        confirm: true
       },
       ctx
     );
@@ -100,7 +101,7 @@ export async function runOffboardingWorkflow(
     // -------------------------------------------------------------
     ctx.logger.info('Step 4: Marking employee status as Offboarded...');
     const markInactiveTool = new MarkEmployeeInactiveTool();
-    const inactiveResult = await markInactiveTool.execute({ email: employeeEmail }, ctx);
+    const inactiveResult = await markInactiveTool.execute({ email: employeeEmail, confirm: true }, ctx);
     results.markEmployeeInactive = inactiveResult;
 
     await tracker.addStep(

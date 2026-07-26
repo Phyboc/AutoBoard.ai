@@ -2,6 +2,7 @@ import { ExecutionContext } from '@nitrostack/core';
 import { readDB, writeDB } from '../../../utils/db.js';
 import { logAudit } from '../../../utils/auditLogger.js';
 import { ExecutionTracker } from '../../../utils/executionTracker.js';
+import { requireConfirmation } from '../../../utils/permissionCheck.js';
 
 export const mockUserDatabase = [
   { 
@@ -18,6 +19,17 @@ export const mockUserDatabase = [
 
 export class RevokeAccountTool {
   async execute(input: { platform: string; email: string; confirm?: boolean }, ctx: ExecutionContext) {
+    // Confirmation guard: ask once before revoking accounts
+    const confirmation = requireConfirmation(input, ctx, `revoke ${input.platform} access for ${input.email}`);
+    if (!confirmation.confirmed) {
+      ctx.logger.info(`[revokeAccount] Confirmation required for ${input.email} — operating as ${confirmation.role}`);
+      return {
+        success: false,
+        message: confirmation.message,
+        data: null
+      };
+    }
+
     const tracker = new ExecutionTracker('REVOKE_ACCOUNT');
     const cleanEmail = (input.email || '').trim().toLowerCase();
     const cleanPlatform = (input.platform || '').trim();

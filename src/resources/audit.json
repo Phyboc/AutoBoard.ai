@@ -470,5 +470,101 @@
     "system": "Ticketing System",
     "status": "SUCCESS",
     "details": "Successfully assigned task 'sde1' (TKT-101) to ramu@hc.com."
+  },
+  {
+    "timestamp": "2026-07-26T07:06:39.085Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: Dev"
+  },
+  {
+    "timestamp": "2026-07-26T07:06:39.093Z",
+    "employee": "jeri@mail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Jeremiah (emp-9087) with role Dev"
+  },
+  {
+    "timestamp": "2026-07-26T07:06:39.100Z",
+    "employee": "jeri@mail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Jeremiah"
+  },
+  {
+    "timestamp": "2026-07-26T07:06:39.106Z",
+    "employee": "jeri@mail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Jeremiah"
+  },
+  {
+    "timestamp": "2026-07-26T07:06:39.114Z",
+    "employee": "jeri@mail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T07:06:46.063Z",
+    "employee": "jeri@mail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWyAHkibTVgWlSlamWyBocMH5fY0rVFAAAAAW4hoGtBxda3kY2SGFlRfhA"
+  },
+  {
+    "timestamp": "2026-07-26T07:07:16.899Z",
+    "employee": "jeri@mail.com",
+    "action": "ASSIGN_TASK",
+    "system": "Ticketing System",
+    "status": "SUCCESS",
+    "details": "Successfully assigned task 'run audit' (TKT-102) to jeri@mail.com."
+  },
+  {
+    "timestamp": "2026-07-26T07:08:15.260Z",
+    "employee": "jeri@mail.com",
+    "action": "GET_USER_ACCESS",
+    "system": "Identity Provider",
+    "status": "SUCCESS",
+    "details": "Retrieved 2 active platform(s) for Jeremiah"
+  },
+  {
+    "timestamp": "2026-07-26T07:08:15.270Z",
+    "employee": "jeri@mail.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Successfully revoked Google Workspace access for jeri@mail.com."
+  },
+  {
+    "timestamp": "2026-07-26T07:08:15.276Z",
+    "employee": "jeri@mail.com",
+    "action": "REVOKE_ACCOUNT",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Successfully revoked Slack access for jeri@mail.com."
+  },
+  {
+    "timestamp": "2026-07-26T07:08:15.283Z",
+    "employee": "jeri@mail.com",
+    "action": "REASSIGN_TICKETS",
+    "system": "Ticketing System",
+    "status": "SUCCESS",
+    "details": "Reassigned 1 ticket(s) [TKT-102] to sarah.connor@company.com"
+  },
+  {
+    "timestamp": "2026-07-26T07:08:15.289Z",
+    "employee": "jeri@mail.com",
+    "action": "MARK_EMPLOYEE_INACTIVE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Updated employee status for Jeremiah (emp-9087) to Offboarded"
   }
 ]
