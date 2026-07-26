@@ -1,8 +1,9 @@
-import { ToolDecorator as Tool, ExecutionContext, z } from '@nitrostack/core';
+import { ToolDecorator as Tool, ExecutionContext, z, UseGuards } from '@nitrostack/core';
 import { GetUserAccessTool } from './tools/getUserAccess.js';
 import { RevokeAccountTool } from './tools/revokeAccount.js';
 import { ReassignTicketsTool } from './tools/reassignTickets.js';
 import { MarkEmployeeInactiveTool } from './tools/markEmployeeInactive.js';
+import { AdminGuard } from '../../shared/guards/admin.guard.js';
 
 /**
  * Offboarding tool class that aggregates all employee offboarding tools.
@@ -29,6 +30,7 @@ export class OffboardingTools {
       email: z.string().email().describe('The company email of the employee')
     })
   })
+  @UseGuards(AdminGuard)
   async revokeAccount(input: { platform: string; email: string }, ctx: ExecutionContext) {
     return new RevokeAccountTool().execute(input, ctx);
   }
@@ -52,6 +54,7 @@ export class OffboardingTools {
       email: z.string().email().describe('The company email of the employee to mark inactive')
     })
   })
+  @UseGuards(AdminGuard)
   async markEmployeeInactive(input: { email: string }, ctx: ExecutionContext) {
     return new MarkEmployeeInactiveTool().execute(input, ctx);
   }

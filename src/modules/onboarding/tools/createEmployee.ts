@@ -12,6 +12,7 @@ export interface Employee {
   status: 'Onboarding' | 'Active' | 'Offboarded';
   provisionedAccounts: string[];
   assignedTraining: string[];
+  welcomeEmailSent?: boolean;
 }
 
 export class CreateEmployeeTool {

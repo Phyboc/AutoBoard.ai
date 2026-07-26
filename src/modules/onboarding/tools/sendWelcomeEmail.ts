@@ -91,6 +91,7 @@ export class SendWelcomeEmailTool {
       }
 
       emp.status = 'Active';
+      emp.welcomeEmailSent = true;
       await writeDB('employees.json', employees);
 
       await tracker.addStep('Send Welcome Email', 'SUCCESS');
