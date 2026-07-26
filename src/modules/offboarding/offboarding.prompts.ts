@@ -3,53 +3,40 @@ import { PromptDecorator as Prompt, ExecutionContext } from '@nitrostack/core';
 export class OffboardingPrompts {
 
   @Prompt({
-    name: 'offboarding_help',
-    description: 'Get help with employee offboarding workflow',
+    name: 'offboard_employee',
+    description: 'Autonomous orchestration prompt to offboard an employee',
     arguments: [
       {
-        name: 'employee_name',
-        description: 'The name of the employee being offboarded (optional)',
-        required: false
+        name: 'employee_email',
+        description: 'The company email of the employee to offboard',
+        required: true
+      },
+      {
+        name: 'reassign_email',
+        description: 'The email address of the employee taking over the tickets',
+        required: true
       }
     ]
   })
-  async getOffboardingHelp(args: { employee_name?: string }, ctx: ExecutionContext) {
-    ctx.logger.info('Generating offboarding help prompt');
-
-    const employeeName = args.employee_name;
-
-    if (employeeName) {
-      return [
-        {
-          role: 'user' as const,
-          content: `How do I offboard ${employeeName}?`
-        },
-        {
-          role: 'assistant' as const,
-          content: `# Offboarding Workflow for ${employeeName}\n\n` +
-            `To offboard ${employeeName}, you would typically:\n\n` +
-            `1. **Get user access** - See all platforms they have access to\n` +
-            `2. **Revoke accounts** - Remove access from each platform\n` +
-            `3. **Reassign tickets** - Transfer their tickets to another employee\n` +
-            `4. **Mark employee inactive** - Update their status in the database to Inactive\n\n` +
-            `TODO: Implement real offboarding orchestration logic.`
-        }
-      ];
-    }
+  async getOffboardingWorkflow(args: { employee_email: string; reassign_email: string }, ctx: ExecutionContext) {
+    ctx.logger.info(`Generating offboarding orchestration prompt for ${args.employee_email}`);
 
     return [
       {
         role: 'user' as const,
-        content: 'How do I offboard an employee?'
+        content: `I want to offboard the employee with email ${args.employee_email} and reassign their tickets to ${args.reassign_email}.`
       },
       {
         role: 'assistant' as const,
-        content: `# Offboarding Workflow\n\n` +
-          `1. \`getUserAccess\` - View current platform access\n` +
-          `2. \`revokeAccount\` - Remove access from platforms\n` +
-          `3. \`reassignTickets\` - Transfer outstanding work\n` +
-          `4. \`markEmployeeInactive\` - Set status to Inactive in database\n\n` +
-          `TODO: Implement real offboarding orchestration logic.`
+        content: `You are an orchestration AI responsible for offboarding this employee.
+Execute the following steps fully autonomously, invoking the necessary tools back-to-back:
+
+1. Use \`getUserAccess\` with the email "${args.employee_email}" to see all the platforms they have access to.
+2. For each platform returned in step 1, invoke \`revokeAccount\` with the platform name and the email "${args.employee_email}".
+3. Invoke \`reassignTickets\` with \`oldEmail\` as "${args.employee_email}" and \`newEmail\` as "${args.reassign_email}".
+4. Invoke \`markEmployeeInactive\` with the email "${args.employee_email}".
+
+Do not stop for human confirmation unless a tool fails unexpectedly and you need human intervention. Once all steps are complete, output a final summary markdown report to the user detailing the completed offboarding process.`
       }
     ];
   }
