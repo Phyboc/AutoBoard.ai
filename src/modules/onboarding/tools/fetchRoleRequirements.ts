@@ -15,7 +15,10 @@ export class FetchRoleRequirementsTool {
     ctx.logger.info('Fetching role requirements', { role: input.role });
 
     try {
-      const rolesMap = (await readDB('roles.json')) || {};
+      let rolesMap = await readDB('roles.json');
+      if (Array.isArray(rolesMap) && rolesMap.length === 0) {
+        rolesMap = {};
+      }
 
       const defaultRequirements: RoleRequirements = {
         software: ['Google Workspace', 'Slack'],

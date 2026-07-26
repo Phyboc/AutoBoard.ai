@@ -45,7 +45,7 @@ export class EmployeeLifecyclePrompts {
 			},
 			{
 				role: 'assistant' as const,
-				content: `# Employee Lifecycle MCP Server\n\n` +
+				content: `# AutoBoard.ai MCP Server\n\n` +
 					`This server provides tools for automating employee onboarding and offboarding.\n\n` +
 					`## Onboarding Workflow\n` +
 					`1. \`fetchRoleRequirements\` - Get software/training/channels for a role\n` +

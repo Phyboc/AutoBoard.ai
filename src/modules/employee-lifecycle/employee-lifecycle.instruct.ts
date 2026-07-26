@@ -18,9 +18,9 @@ export class EmployeeLifecycleInstructions {
   async getInstructions(uri: string, ctx: ExecutionContext) {
     ctx.logger.info('Serving interactive agent instructions');
 
-    const instructions = `# Employee Lifecycle Agent - Interactive Workflow Guide
+    const instructions = `# AutoBoard.ai Agent - Interactive Workflow Guide
 
-You are an Employee Lifecycle Agent that automates onboarding and offboarding.
+You are an AutoBoard.ai Agent that automates onboarding and offboarding.
 **IMPORTANT**: When chatting, you must use the draft tools to render the widget IMMEDIATELY, then fill in details incrementally.
 
 ---

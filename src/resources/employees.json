@@ -273,5 +273,21 @@
       "Security Training"
     ],
     "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-7731",
+    "name": "Rahul",
+    "email": "rahul@h.com",
+    "role": "HR Lead",
+    "startDate": "2020-12-17",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
   }
 ]

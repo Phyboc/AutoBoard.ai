@@ -14,7 +14,7 @@ import { EmployeeLifecycleInstructions } from './modules/employee-lifecycle/empl
 @McpApp({
   module: AppModule,
   server: {
-    name: 'employee-lifecycle-server',
+    name: 'AutoBoard.ai',
     version: '1.0.0'
   },
   logging: {

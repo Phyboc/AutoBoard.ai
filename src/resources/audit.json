@@ -366,5 +366,53 @@
     "system": "Email Service",
     "status": "SUCCESS",
     "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWPo3kibTVgVS20amWPpvraIFk9bIgPAAAAAYR6WfampXJGET52wttWLqA"
+  },
+  {
+    "timestamp": "2026-07-26T04:54:17.722Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: HR Lead"
+  },
+  {
+    "timestamp": "2026-07-26T04:54:17.751Z",
+    "employee": "rahul@h.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Rahul (emp-7731) with role HR Lead"
+  },
+  {
+    "timestamp": "2026-07-26T04:54:17.777Z",
+    "employee": "rahul@h.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Rahul"
+  },
+  {
+    "timestamp": "2026-07-26T04:54:17.805Z",
+    "employee": "rahul@h.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Rahul"
+  },
+  {
+    "timestamp": "2026-07-26T04:54:17.870Z",
+    "employee": "rahul@h.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T04:54:21.810Z",
+    "employee": "rahul@h.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWS-nkibTVgVY27amWS.SLBEfRi4qq4AAAAARIie-9WE8KjoV3QEtgg9ts"
   }
 ]

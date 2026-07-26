@@ -1,4 +1,4 @@
-import { Tool, Widget, ExecutionContext } from '@nitrostack/core';
+import { ExecutionContext } from '@nitrostack/core';
 import { readDB, writeDB } from '../../../utils/db.js';
 import { logAudit } from '../../../utils/auditLogger.js';
 import { ExecutionTracker } from '../../../utils/executionTracker.js';

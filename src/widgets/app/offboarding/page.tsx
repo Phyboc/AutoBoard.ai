@@ -255,7 +255,7 @@ export default function OffboardingWidget() {
         textAlign: 'center',
         opacity: 0.5
       }}>
-        Employee Lifecycle Agent
+        AutoBoard.ai Agent
       </div>
     </div>
   );

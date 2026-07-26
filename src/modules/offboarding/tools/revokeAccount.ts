@@ -65,7 +65,10 @@ export class RevokeAccountTool {
     }
 
     try {
-      const employees = (await readDB('employees.json')) || mockUserDatabase;
+      let employees = await readDB('employees.json');
+      if (Array.isArray(employees) && employees.length === 0) {
+        employees = mockUserDatabase;
+      }
 
       const user = employees.find(
         (u: any) =>
