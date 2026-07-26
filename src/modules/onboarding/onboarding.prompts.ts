@@ -34,20 +34,20 @@ export class OnboardingPrompts {
     return [
       {
         role: 'user' as const,
-        content: `I want to onboard a new employee: ${args.employee_name} (${args.employee_email}) as a ${args.employee_role} starting on ${args.start_date}.`
-      },
-      {
-        role: 'assistant' as const,
-        content: `You are an orchestration AI responsible for onboarding this employee. 
-Execute the following steps fully autonomously, invoking the necessary tools back-to-back:
+        content: `Please onboard a new employee with the following details:
+- Name: ${args.employee_name}
+- Email: ${args.employee_email}
+- Role: ${args.employee_role}
+- Start Date: ${args.start_date}
 
-1. Use \`fetchRoleRequirements\` for the role "${args.employee_role}" to determine the required platforms and training modules.
-2. Use \`createEmployee\` to register the employee with name "${args.employee_name}", email "${args.employee_email}", role "${args.employee_role}", and start date "${args.start_date}".
-3. For each platform returned in step 1, invoke \`provisionAccount\` with the platform name and email.
-4. Invoke \`assignTraining\` passing the email and the array of training modules returned in step 1.
-5. Invoke \`sendWelcomeEmail\` with the email.
+Instructions for you (the AI Assistant):
+1. First, execute the tool \`fetchRoleRequirements\` with role "${args.employee_role}" to get the required platforms and training modules.
+2. Next, execute the tool \`createEmployee\` with name "${args.employee_name}", email "${args.employee_email}", role "${args.employee_role}", and startDate "${args.start_date}".
+3. For each platform returned in step 1, execute \`provisionAccount\` with platform name and email "${args.employee_email}".
+4. Execute \`assignTraining\` with email "${args.employee_email}" and the array of training modules returned in step 1.
+5. Execute \`sendWelcomeEmail\` with email "${args.employee_email}".
 
-Do not stop for human confirmation unless a tool fails unexpectedly and you need human intervention. Once all steps are complete, output a final summary markdown report to the user detailing the completed onboarding process.`
+Please run these tools back-to-back right now to update the database records.`
       }
     ];
   }

@@ -24,19 +24,15 @@ export class OffboardingPrompts {
     return [
       {
         role: 'user' as const,
-        content: `I want to offboard the employee with email ${args.employee_email} and reassign their tickets to ${args.reassign_email}.`
-      },
-      {
-        role: 'assistant' as const,
-        content: `You are an orchestration AI responsible for offboarding this employee.
-Execute the following steps fully autonomously, invoking the necessary tools back-to-back:
+        content: `Please offboard the employee with email ${args.employee_email} and reassign their tickets to ${args.reassign_email}.
 
-1. Use \`getUserAccess\` with the email "${args.employee_email}" to see all the platforms they have access to.
-2. For each platform returned in step 1, invoke \`revokeAccount\` with the platform name and the email "${args.employee_email}".
-3. Invoke \`reassignTickets\` with \`oldEmail\` as "${args.employee_email}" and \`newEmail\` as "${args.reassign_email}".
-4. Invoke \`markEmployeeInactive\` with the email "${args.employee_email}".
+Instructions for you (the AI Assistant):
+1. First, execute \`getUserAccess\` with email "${args.employee_email}" to see all their assigned platforms.
+2. For each platform returned in step 1, execute \`revokeAccount\` with the platform name and email "${args.employee_email}".
+3. Execute \`reassignTickets\` with oldEmail as "${args.employee_email}" and newEmail as "${args.reassign_email}".
+4. Execute \`markEmployeeInactive\` with email "${args.employee_email}".
 
-Do not stop for human confirmation unless a tool fails unexpectedly and you need human intervention. Once all steps are complete, output a final summary markdown report to the user detailing the completed offboarding process.`
+Please run these tools back-to-back right now to update the database records.`
       }
     ];
   }
