@@ -9,9 +9,8 @@ interface OnboardingWidgetPayload {
   email?: string;
   employeeId?: string;
   role?: string;
-  startDate?: string;
   items: { label: string; sublabel?: string; done: boolean }[];
-  status: 'Pending' | 'In Progress' | 'Completed' | 'Ready';
+  status: 'Pending' | 'In Progress' | 'Completed';
   message?: string;
 }
 
@@ -32,30 +31,14 @@ export default function OnboardingWidget() {
     const msg = input.message || '';
     const success = input.success !== false;
 
-    // 1. Default / Explicit Checklist structure (Prioritize this if explicitly set)
-    if (data.actionType === 'GENERIC_PROGRESS' || (data.employeeName && Array.isArray(data.progress))) {
-      return {
-        actionType: 'GENERIC_PROGRESS',
-        employeeName: data.employeeName || data.name || 'New Hire',
-        email: data.email,
-        employeeId: data.employeeId || data.id,
-        role: data.role,
-        startDate: data.startDate,
-        items: data.progress.map((p: any) => ({ label: p.label, done: !!p.done })),
-        status: data.status || 'In Progress',
-        message: msg
-      };
-    }
-
-    // 2. Detect `createEmployee` tool output
+    // 1. Detect `createEmployee` tool output
     if (data.role || data.department || (data.id && data.name && !data.modules && !data.provisioned)) {
       return {
         actionType: 'CREATE_EMPLOYEE',
-        employeeName: data.employeeName || data.name || 'New Employee',
+        employeeName: data.name || 'New Employee',
         email: data.email,
         employeeId: data.id || data.employeeId,
         role: data.role || data.title,
-        startDate: data.startDate,
         items: [
           { label: 'Employee Profile Created', sublabel: `ID: ${data.id || 'Generated'}`, done: true },
           { label: 'Email Assigned', sublabel: data.email || 'Pending', done: !!data.email },
@@ -71,7 +54,7 @@ export default function OnboardingWidget() {
       const modules: string[] = data.modules || data.trainingList || [];
       return {
         actionType: 'ASSIGN_TRAINING',
-        employeeName: data.employeeName || data.name || data.email || 'Employee',
+        employeeName: data.name || data.email || 'Employee',
         email: data.email,
         employeeId: data.employeeId,
         items: modules.length > 0 
@@ -87,13 +70,24 @@ export default function OnboardingWidget() {
       const provisioned: string[] = data.provisioned || [];
       return {
         actionType: 'PROVISION_ACCOUNT',
-        employeeName: data.employeeName || data.name || data.email || 'Employee',
+        employeeName: data.name || data.email || 'Employee',
         email: data.email,
         employeeId: data.employeeId,
         items: provisioned.length > 0
           ? provisioned.map((sys) => ({ label: `Access Granted: ${sys}`, done: true }))
           : [{ label: 'Account Provisioning', done: success }],
         status: success ? 'Completed' : 'In Progress',
+        message: msg
+      };
+    }
+
+    // 4. Default / Explicit Checklist structure
+    if (data.employeeName && Array.isArray(data.progress)) {
+      return {
+        actionType: 'GENERIC_PROGRESS',
+        employeeName: data.employeeName,
+        items: data.progress.map((p: any) => ({ label: p.label, done: !!p.done })),
+        status: data.status || 'In Progress',
         message: msg
       };
     }
@@ -162,8 +156,8 @@ export default function OnboardingWidget() {
         </span>
       </div>
 
-      {/* Profile Details Header for createEmployee & generic progress */}
-      {(payload.actionType === 'CREATE_EMPLOYEE' || payload.actionType === 'GENERIC_PROGRESS') && (payload.role || payload.email || payload.startDate) && (
+      {/* Profile Details Header for createEmployee */}
+      {payload.actionType === 'CREATE_EMPLOYEE' && (payload.role || payload.email) && (
         <div style={{
           background: 'rgba(255,255,255,0.1)',
           padding: '10px 14px',
@@ -174,9 +168,8 @@ export default function OnboardingWidget() {
           flexDirection: 'column',
           gap: '4px'
         }}>
-          {payload.role && <div><strong>Role:</strong> {payload.role !== 'TBD' ? payload.role : <span style={{ opacity: 0.6 }}>TBD</span>}</div>}
-          {payload.email && <div><strong>Email:</strong> {payload.email !== 'TBD' ? payload.email : <span style={{ opacity: 0.6 }}>TBD</span>}</div>}
-          {payload.startDate && <div><strong>Start Date:</strong> {payload.startDate !== 'TBD' ? payload.startDate : <span style={{ opacity: 0.6 }}>TBD</span>}</div>}
+          {payload.role && <div><strong>Role:</strong> {payload.role}</div>}
+          {payload.email && <div><strong>Email:</strong> {payload.email}</div>}
           {payload.employeeId && <div><strong>ID:</strong> {payload.employeeId}</div>}
         </div>
       )}

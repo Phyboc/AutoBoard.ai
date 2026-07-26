@@ -69,7 +69,6 @@ The LLM should call this tool as soon as the employee's name is known, then call
         employeeName: name,
         email,
         role,
-        startDate: start,
         status: 'In Progress',
         progress: [
           {

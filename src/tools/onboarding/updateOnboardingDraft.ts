@@ -119,7 +119,6 @@ Updates the onboarding widget state with new information and returns the refresh
         employeeName: name,
         email: currentEmail || 'TBD',
         role: currentRole || 'TBD',
-        startDate: currentStart || 'TBD',
         status,
         progress
       }
