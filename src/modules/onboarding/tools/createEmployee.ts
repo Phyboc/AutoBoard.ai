@@ -1,6 +1,7 @@
-import { ExecutionContext } from '@nitrostack/core';
-import { readFile, writeFile } from 'node:fs/promises';
-import { getResourcePath } from '../../../shared/utils/resource-path.js';
+import { Tool, Widget, ExecutionContext } from '@nitrostack/core';
+import { readDB, writeDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 
 export interface Employee {
   id: string;
@@ -18,29 +19,28 @@ export class CreateEmployeeTool {
     input: { name: string; email?: string; role: string; startDate: string },
     ctx: ExecutionContext
   ) {
+    const tracker = new ExecutionTracker('CREATE_EMPLOYEE');
+    const email = input.email?.trim() || `${input.name.toLowerCase().replace(/\s+/g, '.')}@company.com`;
+
     ctx.logger.info('Creating employee profile', { name: input.name, role: input.role });
 
     try {
-      const filePath = getResourcePath('employees.json');
-
-      let employees: Employee[] = [];
-      try {
-        const fileData = await readFile(filePath, 'utf-8');
-        employees = JSON.parse(fileData);
-      } catch (readError) {
-        ctx.logger.warn('employees.json missing or unreadable, starting empty', {
-          error: (readError as Error).message
-        });
+      if (!input.name || !input.name.trim()) {
+        throw new Error('Validation Error: Employee name cannot be empty.');
+      }
+      if (!input.role || !input.role.trim()) {
+        throw new Error('Validation Error: Employee role cannot be empty.');
       }
 
-      const email = input.email || `${input.name.toLowerCase().replace(/\s+/g, '.')}@company.com`;
+      const employees: Employee[] = (await readDB('employees.json')) || [];
+
       const id = `emp-${Date.now().toString().slice(-4)}`;
 
       const newEmployee: Employee = {
         id,
-        name: input.name,
+        name: input.name.trim(),
         email,
-        role: input.role,
+        role: input.role.trim(),
         startDate: input.startDate,
         status: 'Onboarding',
         provisionedAccounts: [],
@@ -48,22 +48,61 @@ export class CreateEmployeeTool {
       };
 
       employees.push(newEmployee);
-      await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
+      await writeDB('employees.json', employees);
 
       ctx.logger.info('Successfully created employee profile', { id, name: input.name });
+
+      await tracker.addStep('Create Employee Record', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: email,
+        action: 'CREATE_EMPLOYEE',
+        system: 'HRIS / Internal DB',
+        status: 'SUCCESS',
+        details: `Created employee ${input.name} (${id}) with role ${input.role}`
+      });
 
       return {
         success: true,
         message: `Successfully created employee profile for ${input.name}`,
-        data: newEmployee
+        data: newEmployee,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: true,
+            message: `Successfully created employee profile for ${input.name}`,
+            data: newEmployee
+          }
+        }
       };
     } catch (error) {
-      ctx.logger.error('Failed to create employee', { error: (error as Error).message });
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to create employee', { error: errMsg });
+
+      await tracker.addStep('Create Employee Record', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: email || 'UNKNOWN',
+        action: 'CREATE_EMPLOYEE',
+        system: 'HRIS / Internal DB',
+        status: 'FAILED',
+        details: errMsg
+      });
 
       return {
         success: false,
-        message: `Failed to create employee profile: ${(error as Error).message}`,
-        data: null
+        message: `Failed to create employee profile: ${errMsg}`,
+        data: null,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: `Failed to create employee profile: ${errMsg}`,
+            data: null
+          }
+        }
       };
     }
   }

@@ -1,6 +1,7 @@
 import { ExecutionContext } from '@nitrostack/core';
-import { readFile } from 'node:fs/promises';
-import { getResourcePath } from '../../../shared/utils/resource-path.js';
+import { readDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 
 export interface RoleRequirements {
   software: string[];
@@ -10,20 +11,32 @@ export interface RoleRequirements {
 
 export class FetchRoleRequirementsTool {
   async execute(input: { role: string }, ctx: ExecutionContext) {
+    const tracker = new ExecutionTracker('FETCH_ROLE_REQUIREMENTS');
     ctx.logger.info('Fetching role requirements', { role: input.role });
 
     try {
-      const filePath = getResourcePath('roles.json');
-      const fileData = await readFile(filePath, 'utf-8');
-      const rolesMap: Record<string, RoleRequirements> = JSON.parse(fileData);
+      const rolesMap = (await readDB('roles.json')) || {};
 
-      const requirements = rolesMap[input.role];
+      const requirements: RoleRequirements | undefined = rolesMap[input.role];
 
       if (!requirements) {
-        ctx.logger.warn(`Role requirements not found for: ${input.role}`);
+        const notFoundMsg = `Role '${input.role}' was not found in roles.json.`;
+        ctx.logger.warn(notFoundMsg);
+
+        await tracker.addStep('Fetch Role Requirements', 'FAILED', notFoundMsg);
+        await tracker.finishWorkflow();
+
+        await logAudit({
+          employee: 'SYSTEM',
+          action: 'FETCH_ROLE_REQUIREMENTS',
+          system: 'Role Repository',
+          status: 'FAILED',
+          details: notFoundMsg
+        });
+
         return {
           success: false,
-          message: `Role '${input.role}' was not found in roles.json.`,
+          message: notFoundMsg,
           data: {
             role: input.role,
             software: [],
@@ -34,6 +47,17 @@ export class FetchRoleRequirementsTool {
       }
 
       ctx.logger.info('Successfully fetched role requirements', { role: input.role });
+
+      await tracker.addStep('Fetch Role Requirements', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: 'SYSTEM',
+        action: 'FETCH_ROLE_REQUIREMENTS',
+        system: 'Role Repository',
+        status: 'SUCCESS',
+        details: `Fetched requirements for role: ${input.role}`
+      });
 
       return {
         success: true,
@@ -46,11 +70,23 @@ export class FetchRoleRequirementsTool {
         }
       };
     } catch (error) {
-      ctx.logger.error('Failed to read roles.json', { error: (error as Error).message });
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to read roles.json', { error: errMsg });
+
+      await tracker.addStep('Fetch Role Requirements', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: 'SYSTEM',
+        action: 'FETCH_ROLE_REQUIREMENTS',
+        system: 'Role Repository',
+        status: 'FAILED',
+        details: errMsg
+      });
 
       return {
         success: false,
-        message: `Failed to load role requirements: ${(error as Error).message}`,
+        message: `Failed to load role requirements: ${errMsg}`,
         data: {
           role: input.role,
           software: [],

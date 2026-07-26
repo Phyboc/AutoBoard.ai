@@ -2,27 +2,87 @@
 	"version": "1.0.0",
 	"widgets": [
 		{
-			"uri": "/employee-lifecycle",
-			"name": "Employee Lifecycle Widget",
-			"description": "Displays employee onboarding and lifecycle event execution payloads",
+			"uri": "/onboarding",
+			"name": "Onboarding Widget",
+			"description": "Displays employee onboarding progress with checklist and status",
 			"examples": [
 				{
-					"name": "Create Employee Example",
-					"description": "Shows payload for creating a new employee profile",
+					"name": "Sarah's Onboarding",
+					"description": "Shows the onboarding progress for Sarah",
 					"data": {
-						"toolName": "createEmployee",
-						"input": {
-							"name": "Jane Doe",
-							"email": "jane@email.com",
-							"role": "Engineer",
-							"startDate": "2025-01-10"
-						}
+						"employeeName": "Sarah",
+						"progress": [
+							{
+								"label": "Fetch Role Requirements",
+								"done": true
+							},
+							{
+								"label": "Create Employee Profile",
+								"done": true
+							},
+							{
+								"label": "Provision Accounts",
+								"done": true
+							},
+							{
+								"label": "Assign Training",
+								"done": false
+							},
+							{
+								"label": "Send Welcome Email",
+								"done": false
+							}
+						],
+						"status": "In Progress"
 					}
 				}
 			],
 			"tags": [
 				"employee",
 				"onboarding",
+				"lifecycle"
+			]
+		},
+		{
+			"uri": "/offboarding",
+			"name": "Offboarding Widget",
+			"description": "Displays employee offboarding progress with system revocations and ticket reassignments",
+			"examples": [
+				{
+					"name": "Alex's Offboarding",
+					"description": "Shows the offboarding progress for Alex",
+					"data": {
+						"employeeName": "Alex",
+						"revokedSystems": [
+							{
+								"name": "Google Workspace",
+								"revoked": true
+							},
+							{
+								"name": "Slack",
+								"revoked": true
+							},
+							{
+								"name": "GitHub",
+								"revoked": false
+							},
+							{
+								"name": "Jira",
+								"revoked": false
+							}
+						],
+						"ticketReassignment": {
+							"count": 2,
+							"assignedTo": "bob@company.com",
+							"done": false
+						},
+						"status": "In Progress"
+					}
+				}
+			],
+			"tags": [
+				"employee",
+				"offboarding",
 				"lifecycle"
 			]
 		}

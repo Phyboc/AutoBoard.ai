@@ -1,8 +1,8 @@
 import { ExecutionContext } from '@nitrostack/core';
+import { readDB, writeDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 
-// 1. Hackathon Mock Identity Database
-// This simulates an identity provider (like Okta or Microsoft Entra).
-// We are hardcoding Sarah here so your agent has someone to offboard during the demo.
 export const mockUserDatabase = [
   { 
     email: "sarah@company.com", 
@@ -17,54 +17,149 @@ export const mockUserDatabase = [
 ];
 
 export class RevokeAccountTool {
-  async execute(input: { platform: string; email: string }, ctx: ExecutionContext) {
-    ctx.logger.info('Revoking account', { platform: input.platform, email: input.email });
+  async execute(input: { platform: string; email: string; confirm?: boolean }, ctx: ExecutionContext) {
+    const tracker = new ExecutionTracker('REVOKE_ACCOUNT');
+    const cleanEmail = (input.email || '').trim().toLowerCase();
+    const cleanPlatform = (input.platform || '').trim();
 
-    // 2. Find the user in our mock database
-    const user = mockUserDatabase.find(u => u.email === input.email);
+    ctx.logger.info('Revoking account', { platform: cleanPlatform, email: cleanEmail });
 
-    if (!user) {
-      const errorMsg = `User ${input.email} not found in the employee directory.`;
-      ctx.logger.warn(errorMsg);
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      const err = 'Validation Error: Invalid email format. Must contain "@"';
+      await tracker.addStep('Validation', 'FAILED', err);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: cleanEmail || 'UNKNOWN',
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform || 'System',
+        status: 'FAILED',
+        details: err,
+      });
+
       return {
         success: false,
-        message: errorMsg,
+        message: err,
         data: null
       };
     }
 
-    // 3. Check if they have the account, and if so, remove it (revoke it)
-    const accountIndex = user.accounts.findIndex(
-      (acc) => acc.toLowerCase() === input.platform.toLowerCase()
-    );
-    
-    let wasRevoked = false;
+    if (!cleanPlatform) {
+      const err = 'Validation Error: Platform name cannot be empty.';
+      await tracker.addStep('Validation', 'FAILED', err);
+      await tracker.finishWorkflow();
 
-    if (accountIndex > -1) {
-      // Remove the platform from their active accounts array
-      user.accounts.splice(accountIndex, 1); 
-      wasRevoked = true;
+      await logAudit({
+        employee: cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: 'Unknown Platform',
+        status: 'FAILED',
+        details: err,
+      });
+
+      return {
+        success: false,
+        message: err,
+        data: null
+      };
     }
 
-    // 4. Formulate the response for the Agent's "brain"
-    const message = wasRevoked
-      ? `Successfully revoked ${input.platform} access for ${input.email}.`
-      : `No action taken. ${input.email} did not have active access to ${input.platform}.`;
+    try {
+      const employees = (await readDB('employees.json')) || mockUserDatabase;
 
-    ctx.logger.info(message);
+      const user = employees.find(
+        (u: any) =>
+          u.email?.toLowerCase() === cleanEmail ||
+          u.id?.toLowerCase() === cleanEmail ||
+          u.name?.toLowerCase().includes(cleanEmail)
+      );
 
-    // 5. Return the payload to the agent and to your React Widget
-    return {
-      success: true,
-      message: message,
-      data: {
-        platform: input.platform,
-        email: input.email,
-        status: wasRevoked ? 'Revoked' : 'Not Provisioned',
-        // Returning the remaining accounts is perfect for the Widget to update the UI
-        remainingAccounts: user.accounts,
-        fullUserState: user 
+      if (!user) {
+        const errorMsg = `User '${cleanEmail}' not found in the employee directory.`;
+        ctx.logger.warn(errorMsg);
+
+        await tracker.addStep('Find User', 'FAILED', errorMsg);
+        await tracker.finishWorkflow();
+
+        await logAudit({
+          employee: cleanEmail,
+          action: 'REVOKE_ACCOUNT',
+          system: cleanPlatform,
+          status: 'FAILED',
+          details: errorMsg,
+        });
+
+        return {
+          success: false,
+          message: errorMsg,
+          data: null
+        };
       }
-    };
+
+      const accountsList: string[] = user.provisionedAccounts || user.accounts || [];
+      const accountIndex = accountsList.findIndex(
+        (acc) => acc.toLowerCase() === cleanPlatform.toLowerCase()
+      );
+      
+      let wasRevoked = false;
+
+      if (accountIndex > -1) {
+        accountsList.splice(accountIndex, 1);
+        if (user.provisionedAccounts) user.provisionedAccounts = accountsList;
+        if (user.accounts) user.accounts = accountsList;
+        wasRevoked = true;
+
+        await writeDB('employees.json', employees);
+      }
+
+      const message = wasRevoked
+        ? `Successfully revoked ${cleanPlatform} access for ${cleanEmail}.`
+        : `No action taken. ${cleanEmail} did not have active access to ${cleanPlatform}.`;
+
+      ctx.logger.info(message);
+
+      await tracker.addStep('Revoke Account', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: user.email || cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform,
+        status: wasRevoked ? 'SUCCESS' : 'NO_OP',
+        details: message,
+      });
+
+      return {
+        success: true,
+        message,
+        data: {
+          platform: cleanPlatform,
+          email: user.email || cleanEmail,
+          status: wasRevoked ? 'Revoked' : 'Not Provisioned',
+          remainingAccounts: accountsList,
+          fullUserState: user 
+        }
+      };
+    } catch (error) {
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to revoke account', { error: errMsg });
+
+      await tracker.addStep('Revoke Account', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: cleanEmail,
+        action: 'REVOKE_ACCOUNT',
+        system: cleanPlatform,
+        status: 'FAILED',
+        details: errMsg,
+      });
+
+      return {
+        success: false,
+        message: `Failed to revoke account: ${errMsg}`,
+        data: null
+      };
+    }
   }
 }

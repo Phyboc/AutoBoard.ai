@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { readDB, writeDB } from './db.js';
 
 export interface AuditLog {
@@ -11,14 +10,11 @@ export interface AuditLog {
 }
 
 export async function logAudit(entry: AuditLog): Promise<void> {
-  const resolvedPath = path.resolve(process.cwd(), 'src', 'resources', 'audit.json');
-  console.log(`[AUDIT DEBUG] Attempting write to: ${resolvedPath}`);
-
   try {
     const existingLogs = await readDB('audit.json');
 
     const newLog: AuditLog = {
-      timestamp: new Date().toISOString(),
+      timestamp: entry.timestamp || new Date().toISOString(),
       ...entry,
     };
 

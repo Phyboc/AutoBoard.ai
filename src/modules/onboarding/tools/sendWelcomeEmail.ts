@@ -1,6 +1,7 @@
 import { ExecutionContext } from '@nitrostack/core';
-import { readFile, writeFile } from 'node:fs/promises';
-import { getResourcePath } from '../../../shared/utils/resource-path.js';
+import { readDB, writeDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 import { Employee } from './createEmployee.js';
 import nodemailer from 'nodemailer';
 
@@ -10,23 +11,54 @@ interface SendWelcomeEmailInput {
 
 export class SendWelcomeEmailTool {
   async execute(input: SendWelcomeEmailInput, ctx: ExecutionContext) {
+    const tracker = new ExecutionTracker('SEND_WELCOME_EMAIL');
     ctx.logger.info('Sending welcome email', { email: input.email });
 
-    try {
-      const filePath = getResourcePath('employees.json');
-      const fileData = await readFile(filePath, 'utf-8');
-      const employees: Employee[] = JSON.parse(fileData);
+    const targetEmail = (input.email || '').toLowerCase().trim();
 
-      const targetEmail = (input.email || '').toLowerCase().trim();
+    if (!targetEmail) {
+      const errMsg = 'Email must be provided.';
+      await tracker.addStep('Validation', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: 'UNKNOWN',
+        action: 'SEND_WELCOME_EMAIL',
+        system: 'Email Service',
+        status: 'FAILED',
+        details: errMsg
+      });
+
+      return {
+        success: false,
+        message: errMsg,
+        data: { email: input.email, status: 'Failed' }
+      };
+    }
+
+    try {
+      const employees: Employee[] = (await readDB('employees.json')) || [];
 
       const emp = employees.find(
         (e) => e.email.toLowerCase() === targetEmail || e.name.toLowerCase().includes(targetEmail)
       );
 
       if (!emp) {
+        const notFoundMsg = `Employee with email/name '${input.email}' was not found.`;
+        await tracker.addStep('Find Employee', 'FAILED', notFoundMsg);
+        await tracker.finishWorkflow();
+
+        await logAudit({
+          employee: targetEmail,
+          action: 'SEND_WELCOME_EMAIL',
+          system: 'Email Service',
+          status: 'FAILED',
+          details: notFoundMsg
+        });
+
         return {
           success: false,
-          message: `Employee with email/name '${input.email}' was not found.`,
+          message: notFoundMsg,
           data: { email: input.email, status: 'Failed' }
         };
       }
@@ -34,7 +66,6 @@ export class SendWelcomeEmailTool {
       let previewUrl = 'https://ethereal.email/preview-mock';
 
       try {
-        // Attempt Ethereal dispatch with fallback
         const testAccount = await nodemailer.createTestAccount();
         const transporter = nodemailer.createTransport({
           host: 'smtp.ethereal.email',
@@ -60,7 +91,18 @@ export class SendWelcomeEmailTool {
       }
 
       emp.status = 'Active';
-      await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
+      await writeDB('employees.json', employees);
+
+      await tracker.addStep('Send Welcome Email', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: emp.email,
+        action: 'SEND_WELCOME_EMAIL',
+        system: 'Email Service',
+        status: 'SUCCESS',
+        details: `Welcome email sent. Employee status set to Active. Preview URL: ${previewUrl}`
+      });
 
       return {
         success: true,
@@ -73,10 +115,23 @@ export class SendWelcomeEmailTool {
         }
       };
     } catch (error) {
-      ctx.logger.error('Failed to send welcome email', { error: (error as Error).message });
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to send welcome email', { error: errMsg });
+
+      await tracker.addStep('Send Welcome Email', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: targetEmail,
+        action: 'SEND_WELCOME_EMAIL',
+        system: 'Email Service',
+        status: 'FAILED',
+        details: errMsg
+      });
+
       return {
         success: false,
-        message: `Failed to send email: ${(error as Error).message}`,
+        message: `Failed to send email: ${errMsg}`,
         data: { email: input.email, status: 'Failed' }
       };
     }

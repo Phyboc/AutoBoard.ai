@@ -1,6 +1,7 @@
-import { ExecutionContext } from '@nitrostack/core';
-import { readFile, writeFile } from 'node:fs/promises';
-import { getResourcePath } from '../../../shared/utils/resource-path.js';
+import { Tool, Widget, ExecutionContext } from '@nitrostack/core';
+import { readDB, writeDB } from '../../../utils/db.js';
+import { logAudit } from '../../../utils/auditLogger.js';
+import { ExecutionTracker } from '../../../utils/executionTracker.js';
 import { Employee } from './createEmployee.js';
 
 interface ProvisionInput {
@@ -12,26 +13,44 @@ interface ProvisionInput {
 
 export class ProvisionAccountTool {
   async execute(input: ProvisionInput, ctx: ExecutionContext) {
+    const tracker = new ExecutionTracker('PROVISION_ACCOUNT');
+    const targetIdentifier = (input.email || input.employeeId || '').toLowerCase();
+
     ctx.logger.info('Provisioning accounts', { 
       email: String(input.email ?? ''), 
       platform: String(input.platform ?? '') 
     });
 
+    if (!targetIdentifier) {
+      const errMsg = 'Either email or employeeId must be provided.';
+      await tracker.addStep('Validation', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: 'UNKNOWN',
+        action: 'PROVISION_ACCOUNT',
+        system: input.platform || input.softwareList?.join(', ') || 'UNKNOWN',
+        status: 'FAILED',
+        details: errMsg
+      });
+
+      return {
+        success: false,
+        message: errMsg,
+        data: { provisioned: [] },
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: errMsg,
+            data: { provisioned: [] }
+          }
+        }
+      };
+    }
+
     try {
-      const filePath = getResourcePath('employees.json');
-      const fileData = await readFile(filePath, 'utf-8');
-      const employees: Employee[] = JSON.parse(fileData);
-
-      // Identify target employee by email, employeeId, or matching term
-      const targetIdentifier = (input.email || input.employeeId || '').toLowerCase();
-
-      if (!targetIdentifier) {
-        return {
-          success: false,
-          message: 'Either email or employeeId must be provided.',
-          data: { provisioned: [] }
-        };
-      }
+      const employees: Employee[] = (await readDB('employees.json')) || [];
 
       const emp = employees.find(
         (e) =>
@@ -41,14 +60,33 @@ export class ProvisionAccountTool {
       );
 
       if (!emp) {
+        const notFoundMsg = `Employee matching '${targetIdentifier}' was not found.`;
+        await tracker.addStep('Find Employee', 'FAILED', notFoundMsg);
+        await tracker.finishWorkflow();
+
+        await logAudit({
+          employee: targetIdentifier,
+          action: 'PROVISION_ACCOUNT',
+          system: input.platform || input.softwareList?.join(', ') || 'UNKNOWN',
+          status: 'FAILED',
+          details: notFoundMsg
+        });
+
         return {
           success: false,
-          message: `Employee matching '${targetIdentifier}' was not found.`,
-          data: { provisioned: [] }
+          message: notFoundMsg,
+          data: { provisioned: [] },
+          widget: {
+            name: 'OnboardingWidget',
+            props: {
+              success: false,
+              message: notFoundMsg,
+              data: { provisioned: [] }
+            }
+          }
         };
       }
 
-      // Consolidate platforms/softwareList into a single array
       const itemsToProvision: string[] = [];
       if (input.platform) itemsToProvision.push(input.platform);
       if (input.softwareList && Array.isArray(input.softwareList)) {
@@ -56,38 +94,98 @@ export class ProvisionAccountTool {
       }
 
       if (itemsToProvision.length === 0) {
+        const noItemMsg = 'No platform or software specified to provision.';
+        await tracker.addStep('Specify Software', 'FAILED', noItemMsg);
+        await tracker.finishWorkflow();
+
+        const responseData = {
+          employeeId: emp.id,
+          name: emp.name,
+          email: emp.email,
+          provisioned: emp.provisionedAccounts || []
+        };
+
         return {
           success: false,
-          message: 'No platform or software specified to provision.',
-          data: { provisioned: emp.provisionedAccounts }
+          message: noItemMsg,
+          data: responseData,
+          widget: {
+            name: 'OnboardingWidget',
+            props: {
+              success: false,
+              message: noItemMsg,
+              data: responseData
+            }
+          }
         };
       }
 
-      // Add to provisionedAccounts without duplicates
       emp.provisionedAccounts = Array.from(
-        new Set([...emp.provisionedAccounts, ...itemsToProvision])
+        new Set([...(emp.provisionedAccounts || []), ...itemsToProvision])
       );
 
-      await writeFile(filePath, JSON.stringify(employees, null, 2), 'utf-8');
+      await writeDB('employees.json', employees);
 
       ctx.logger.info('Accounts successfully provisioned', { employeeId: emp.id, provisioned: itemsToProvision });
+
+      await tracker.addStep('Provision Accounts', 'SUCCESS');
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: emp.email,
+        action: 'ACCOUNT_PROVISIONED',
+        system: itemsToProvision.join(', '),
+        status: 'SUCCESS',
+        details: `Provisioned accounts [${itemsToProvision.join(', ')}] for ${emp.name}`
+      });
+
+      const responseData = {
+        employeeId: emp.id,
+        name: emp.name,
+        email: emp.email,
+        provisioned: emp.provisionedAccounts
+      };
 
       return {
         success: true,
         message: `Successfully provisioned [${itemsToProvision.join(', ')}] for ${emp.name}`,
-        data: {
-          employeeId: emp.id,
-          name: emp.name,
-          email: emp.email,
-          provisioned: emp.provisionedAccounts
+        data: responseData,
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: true,
+            message: `Successfully provisioned [${itemsToProvision.join(', ')}] for ${emp.name}`,
+            data: responseData
+          }
         }
       };
     } catch (error) {
-      ctx.logger.error('Failed to provision accounts', { error: (error as Error).message });
+      const errMsg = (error as Error).message;
+      ctx.logger.error('Failed to provision accounts', { error: errMsg });
+
+      await tracker.addStep('Provision Accounts', 'FAILED', errMsg);
+      await tracker.finishWorkflow();
+
+      await logAudit({
+        employee: targetIdentifier,
+        action: 'ACCOUNT_PROVISIONED',
+        system: input.platform || input.softwareList?.join(', ') || 'UNKNOWN',
+        status: 'FAILED',
+        details: errMsg
+      });
+
       return {
         success: false,
-        message: `Failed to provision accounts: ${(error as Error).message}`,
-        data: { provisioned: [] }
+        message: `Failed to provision accounts: ${errMsg}`,
+        data: { provisioned: [] },
+        widget: {
+          name: 'OnboardingWidget',
+          props: {
+            success: false,
+            message: `Failed to provision accounts: ${errMsg}`,
+            data: { provisioned: [] }
+          }
+        }
       };
     }
   }

@@ -154,6 +154,7 @@
     "assignedTraining": []
   },
   {
+<<<<<<< HEAD
     "id": "emp-4172",
     "name": "saman",
     "email": "saman@gmail.com",
@@ -219,6 +220,26 @@
     "email": "test5@gmail.com",
     "role": "Engineer",
     "startDate": "2025-01-11",
+=======
+    "id": "emp-2202",
+    "name": "Test Audit Employee",
+    "email": "test.audit@company.com",
+    "role": "Junior Frontend Developer",
+    "startDate": "2026-08-01",
+    "status": "Offboarded",
+    "provisionedAccounts": [],
+    "assignedTraining": [
+      "Security 101",
+      "Frontend Intro"
+    ]
+  },
+  {
+    "id": "emp-2036",
+    "name": "Shreyas",
+    "email": "shreyas@gmail.com",
+    "role": "Junior Software Developer",
+    "startDate": "2026-07-26",
+>>>>>>> be533db33d2dd2405e24574ef313534b466ee316
     "status": "Onboarding",
     "provisionedAccounts": [],
     "assignedTraining": []
