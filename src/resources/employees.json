@@ -289,5 +289,37 @@
       "Security Training"
     ],
     "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-4053",
+    "name": "Ravi",
+    "email": "ravi@h.com",
+    "role": "HR Manager",
+    "startDate": "2020-12-17",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-4148",
+    "name": "Raj",
+    "email": "raj@h.com",
+    "role": "HR Associate",
+    "startDate": "2020-12-17",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
   }
 ]

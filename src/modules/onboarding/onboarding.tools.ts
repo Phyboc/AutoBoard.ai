@@ -4,6 +4,7 @@ import { CreateEmployeeTool } from './tools/createEmployee.js';
 import { ProvisionAccountTool } from './tools/provisionAccount.js';
 import { AssignTrainingTool } from './tools/assignTraining.js';
 import { SendWelcomeEmailTool } from './tools/sendWelcomeEmail.js';
+import { AssignTicketTool } from './tools/assignTicket.js';
 import { InitiateOnboardingTool } from '../../tools/onboarding/initiateOnboarding.js';
 import { UpdateOnboardingDraftTool } from '../../tools/onboarding/updateOnboardingDraft.js';
 
@@ -117,6 +118,19 @@ Updates the onboarding widget with new information and returns a refreshed check
   }
 
   @Tool({
+    name: 'assignTicket',
+    description: 'Assign a new task or ticket to an employee',
+    inputSchema: z.object({
+      email: z.string().email().describe('Company email address of the employee'),
+      title: z.string().describe('Title of the task or ticket'),
+      description: z.string().optional().describe('Optional detailed description of the task')
+    })
+  })
+  async assignTicket(input: { email: string; title: string; description?: string }, ctx: ExecutionContext) {
+    return new AssignTicketTool().execute(input, ctx);
+  }
+
+  @Tool({
     name: 'onboardEmployee',
     description: 'Complete end-to-end employee onboarding workflow (creates profile, provisions accounts, assigns training, and sends welcome email)',
     inputSchema: z.object({
@@ -151,6 +165,7 @@ Updates the onboarding widget with new information and returns a refreshed check
         employeeName: input.name,
         email: input.email,
         role: input.role,
+        startDate: input.startDate,
         employeeId: emp.data?.id,
         progress: [
           { label: 'Fetch Role Requirements', done: true },

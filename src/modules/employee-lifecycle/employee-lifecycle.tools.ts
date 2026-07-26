@@ -4,6 +4,7 @@ import { CreateEmployeeTool } from '../../tools/onboarding/createEmployee.js';
 import { ProvisionAccountTool } from '../../tools/onboarding/provisionAccount.js';
 import { AssignTrainingTool } from '../../tools/onboarding/assignTraining.js';
 import { SendWelcomeEmailTool } from '../../tools/onboarding/sendWelcomeEmail.js';
+import { AssignTicketTool } from '../../tools/onboarding/assignTicket.js';
 import { GetUserAccessTool } from '../../tools/offboarding/getUserAccess.js';
 import { RevokeAccountTool } from '../../tools/offboarding/revokeAccount.js';
 import { ReassignTicketsTool } from '../../tools/offboarding/reassignTickets.js';
@@ -108,6 +109,19 @@ export class EmployeeLifecycleTools {
 	})
 	async reassignTickets(input: { oldEmail: string; newEmail: string }, ctx: ExecutionContext) {
 		return new ReassignTicketsTool().execute(input, ctx);
+	}
+
+	@Tool({
+		name: 'assignTicket',
+		description: 'Assign a new task or ticket to an employee',
+		inputSchema: z.object({
+			email: z.string().email().describe('Company email address of the employee'),
+			title: z.string().describe('Title of the task or ticket'),
+			description: z.string().optional().describe('Optional detailed description of the task')
+		})
+	})
+	async assignTicket(input: { email: string; title: string; description?: string }, ctx: ExecutionContext) {
+		return new AssignTicketTool().execute(input, ctx);
 	}
 
 	@Tool({
