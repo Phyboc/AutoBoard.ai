@@ -537,5 +537,173 @@
     ],
     "startTime": "2026-07-26T01:29:42.787Z",
     "endTime": "2026-07-26T01:29:48.246Z"
+  },
+  {
+    "id": "exec-748344",
+    "type": "FETCH_ROLE_REQUIREMENTS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:22:28.362Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:22:28.344Z",
+    "endTime": "2026-07-26T04:22:28.370Z"
+  },
+  {
+    "id": "exec-748377",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:22:28.385Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:22:28.377Z",
+    "endTime": "2026-07-26T04:22:28.388Z"
+  },
+  {
+    "id": "exec-748393",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:22:28.399Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:22:28.393Z",
+    "endTime": "2026-07-26T04:22:28.403Z"
+  },
+  {
+    "id": "exec-748409",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:22:28.415Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:22:28.409Z",
+    "endTime": "2026-07-26T04:22:28.420Z"
+  },
+  {
+    "id": "exec-748428",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:22:28.434Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:22:28.428Z",
+    "endTime": "2026-07-26T04:22:28.439Z"
+  },
+  {
+    "id": "exec-748449",
+    "type": "SEND_WELCOME_EMAIL",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:22:32.821Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:22:28.449Z",
+    "endTime": "2026-07-26T04:22:32.826Z"
+  },
+  {
+    "id": "exec-801864",
+    "type": "FETCH_ROLE_REQUIREMENTS",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Fetch Role Requirements",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:40:01.867Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:40:01.864Z",
+    "endTime": "2026-07-26T04:40:01.871Z"
+  },
+  {
+    "id": "exec-801878",
+    "type": "CREATE_EMPLOYEE",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Create Employee Record",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:40:01.882Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:40:01.878Z",
+    "endTime": "2026-07-26T04:40:01.885Z"
+  },
+  {
+    "id": "exec-801892",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:40:01.898Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:40:01.892Z",
+    "endTime": "2026-07-26T04:40:01.903Z"
+  },
+  {
+    "id": "exec-801909",
+    "type": "PROVISION_ACCOUNT",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Provision Accounts",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:40:01.911Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:40:01.909Z",
+    "endTime": "2026-07-26T04:40:01.915Z"
+  },
+  {
+    "id": "exec-801923",
+    "type": "ASSIGN_TRAINING",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Assign Training",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:40:01.927Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:40:01.923Z",
+    "endTime": "2026-07-26T04:40:01.930Z"
+  },
+  {
+    "id": "exec-801937",
+    "type": "SEND_WELCOME_EMAIL",
+    "status": "COMPLETED",
+    "steps": [
+      {
+        "name": "Send Welcome Email",
+        "status": "SUCCESS",
+        "timestamp": "2026-07-26T04:40:05.726Z"
+      }
+    ],
+    "startTime": "2026-07-26T04:40:01.937Z",
+    "endTime": "2026-07-26T04:40:05.736Z"
   }
 ]

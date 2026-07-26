@@ -4,12 +4,57 @@ import { CreateEmployeeTool } from './tools/createEmployee.js';
 import { ProvisionAccountTool } from './tools/provisionAccount.js';
 import { AssignTrainingTool } from './tools/assignTraining.js';
 import { SendWelcomeEmailTool } from './tools/sendWelcomeEmail.js';
+import { InitiateOnboardingTool } from '../../tools/onboarding/initiateOnboarding.js';
+import { UpdateOnboardingDraftTool } from '../../tools/onboarding/updateOnboardingDraft.js';
 
 /**
  * Onboarding tool class that aggregates all employee onboarding tools.
  * Each method delegates to the corresponding standalone tool class.
  */
 export class OnboardingTools {
+
+  @Tool({
+    name: 'initiateOnboarding',
+    description: `**DRAFT TOOL** — Call IMMEDIATELY when a user mentions onboarding a new employee.
+Accepts partial details. Any missing fields get "TBD" placeholders so the widget renders instantly.
+The LLM should call this tool as soon as the employee's name is known, then call updateOnboardingDraft as more info is gathered.`,
+    inputSchema: z.object({
+      employeeName: z.string().optional().describe('The name of the employee being onboarded (can be just first name)'),
+      employeeEmail: z.string().optional().describe('Company email address if known'),
+      employeeRole: z.string().optional().describe('Job role/title if known'),
+      startDate: z.string().optional().describe('Start date if known')
+    })
+  })
+  @Widget('/onboarding')
+  async initiateOnboarding(input: {
+    employeeName?: string;
+    employeeEmail?: string;
+    employeeRole?: string;
+    startDate?: string;
+  }, ctx: ExecutionContext) {
+    return new InitiateOnboardingTool().execute(input, ctx);
+  }
+
+  @Tool({
+    name: 'updateOnboardingDraft',
+    description: `**INCREMENTAL UPDATE TOOL** — Call AFTER initiateOnboarding when the user provides more details (email, role, or start date).
+Updates the onboarding widget with new information and returns a refreshed checklist.`,
+    inputSchema: z.object({
+      employeeName: z.string().describe('The employee name (must match the draft from initiateOnboarding)'),
+      employeeEmail: z.string().optional().describe('Company email address (if newly provided)'),
+      employeeRole: z.string().optional().describe('Job role/title (if newly provided)'),
+      startDate: z.string().optional().describe('Start date (if newly provided)')
+    })
+  })
+  @Widget('/onboarding')
+  async updateOnboardingDraft(input: {
+    employeeName: string;
+    employeeEmail?: string;
+    employeeRole?: string;
+    startDate?: string;
+  }, ctx: ExecutionContext) {
+    return new UpdateOnboardingDraftTool().execute(input, ctx);
+  }
 
   @Tool({
     name: 'fetchRoleRequirements',

@@ -270,5 +270,101 @@
     "system": "Email Service",
     "status": "SUCCESS",
     "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amVjCHkibTVgTNWvamVjDKh0HEC2PvzXAAAAARy403P8oFhe5spxu5XmQ4s"
+  },
+  {
+    "timestamp": "2026-07-26T04:22:28.375Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: Manager"
+  },
+  {
+    "timestamp": "2026-07-26T04:22:28.392Z",
+    "employee": "Bron@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Bron (emp-8382) with role Manager"
+  },
+  {
+    "timestamp": "2026-07-26T04:22:28.407Z",
+    "employee": "Bron@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Bron"
+  },
+  {
+    "timestamp": "2026-07-26T04:22:28.426Z",
+    "employee": "Bron@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Bron"
+  },
+  {
+    "timestamp": "2026-07-26T04:22:28.443Z",
+    "employee": "Bron@gmail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T04:22:32.832Z",
+    "employee": "Bron@gmail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWLhXkibTVgVK9UamWLifraIFk9bG5bAAAAAdHNeX3Ktqoj4raLc4NHJis"
+  },
+  {
+    "timestamp": "2026-07-26T04:40:01.876Z",
+    "employee": "SYSTEM",
+    "action": "FETCH_ROLE_REQUIREMENTS",
+    "system": "Role Repository",
+    "status": "SUCCESS",
+    "details": "Fetched requirements for role: dev"
+  },
+  {
+    "timestamp": "2026-07-26T04:40:01.889Z",
+    "employee": "logan@gmail.com",
+    "action": "CREATE_EMPLOYEE",
+    "system": "HRIS / Internal DB",
+    "status": "SUCCESS",
+    "details": "Created employee Logan (emp-1880) with role dev"
+  },
+  {
+    "timestamp": "2026-07-26T04:40:01.907Z",
+    "employee": "logan@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Google Workspace",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Google Workspace] for Logan"
+  },
+  {
+    "timestamp": "2026-07-26T04:40:01.921Z",
+    "employee": "logan@gmail.com",
+    "action": "ACCOUNT_PROVISIONED",
+    "system": "Slack",
+    "status": "SUCCESS",
+    "details": "Provisioned accounts [Slack] for Logan"
+  },
+  {
+    "timestamp": "2026-07-26T04:40:01.935Z",
+    "employee": "logan@gmail.com",
+    "action": "ASSIGN_TRAINING",
+    "system": "LMS / Training System",
+    "status": "SUCCESS",
+    "details": "Assigned modules: Security Training"
+  },
+  {
+    "timestamp": "2026-07-26T04:40:05.745Z",
+    "employee": "logan@gmail.com",
+    "action": "SEND_WELCOME_EMAIL",
+    "system": "Email Service",
+    "status": "SUCCESS",
+    "details": "Welcome email sent. Employee status set to Active. Preview URL: https://ethereal.email/message/amWPo3kibTVgVS20amWPpvraIFk9bIgPAAAAAYR6WfampXJGET52wttWLqA"
   }
 ]

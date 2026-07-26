@@ -241,5 +241,37 @@
       "Security Basics"
     ],
     "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-8382",
+    "name": "Bron",
+    "email": "Bron@gmail.com",
+    "role": "Manager",
+    "startDate": "Wednesday",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
+  },
+  {
+    "id": "emp-1880",
+    "name": "Logan",
+    "email": "logan@gmail.com",
+    "role": "dev",
+    "startDate": "Monday",
+    "status": "Active",
+    "provisionedAccounts": [
+      "Google Workspace",
+      "Slack"
+    ],
+    "assignedTraining": [
+      "Security Training"
+    ],
+    "welcomeEmailSent": true
   }
 ]

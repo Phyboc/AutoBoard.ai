@@ -4,12 +4,56 @@ import { RevokeAccountTool } from './tools/revokeAccount.js';
 import { ReassignTicketsTool } from './tools/reassignTickets.js';
 import { MarkEmployeeInactiveTool } from './tools/markEmployeeInactive.js';
 import { AdminGuard } from '../../shared/guards/admin.guard.js';
+import { InitiateOffboardingTool } from '../../tools/offboarding/initiateOffboarding.js';
+import { UpdateOffboardingDraftTool } from '../../tools/offboarding/updateOffboardingDraft.js';
 
 /**
  * Offboarding tool class that aggregates all employee offboarding tools.
  * Each method delegates to the corresponding standalone tool class.
  */
 export class OffboardingTools {
+
+  @Tool({
+    name: 'initiateOffboarding',
+    description: `**DRAFT TOOL** — Call IMMEDIATELY when a user mentions offboarding an employee.
+Accepts partial details. Missing fields get placeholder values so the widget renders at once.
+The LLM should call this tool as soon as the employee's email is known, then call updateOffboardingDraft as more info arrives.`,
+    inputSchema: z.object({
+      employeeEmail: z.string().optional().describe('The company email of the employee to offboard'),
+      reassignEmail: z.string().optional().describe('The email of the employee who will take over tickets')
+    })
+  })
+  @Widget('/offboarding')
+  async initiateOffboarding(input: {
+    employeeEmail?: string;
+    reassignEmail?: string;
+  }, ctx: ExecutionContext) {
+    return new InitiateOffboardingTool().execute(input, ctx);
+  }
+
+  @Tool({
+    name: 'updateOffboardingDraft',
+    description: `**INCREMENTAL UPDATE TOOL** — Call AFTER initiateOffboarding when more details emerge.
+Updates the offboarding widget state — e.g., when the reassign email is provided or systems are identified.`,
+    inputSchema: z.object({
+      employeeEmail: z.string().describe('The employee email (must match from initiateOffboarding)'),
+      reassignEmail: z.string().optional().describe('The email of the employee taking over tickets (if newly provided)'),
+      revokedSystems: z.array(z.object({
+        name: z.string().describe('Platform name'),
+        revoked: z.boolean().describe('Whether access has been revoked')
+      })).optional().describe('Updated list of systems and their revocation status'),
+      ticketCount: z.number().optional().describe('Number of tickets to reassign (if known)')
+    })
+  })
+  @Widget('/offboarding')
+  async updateOffboardingDraft(input: {
+    employeeEmail: string;
+    reassignEmail?: string;
+    revokedSystems?: { name: string; revoked: boolean }[];
+    ticketCount?: number;
+  }, ctx: ExecutionContext) {
+    return new UpdateOffboardingDraftTool().execute(input, ctx);
+  }
 
   @Tool({
     name: 'getUserAccess',

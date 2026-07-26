@@ -3,6 +3,7 @@ import { OnboardingModule } from './modules/onboarding/onboarding.module.js';
 import { OffboardingModule } from './modules/offboarding/offboarding.module.js';
 import { SystemModule } from './modules/system/system.module.js';
 import { AuditResourceProvider } from './resources/auditResource.js';
+import { EmployeeLifecycleInstructions } from './modules/employee-lifecycle/employee-lifecycle.instruct.js';
 
 /**
  * Root Application Module
@@ -30,7 +31,8 @@ import { AuditResourceProvider } from './resources/auditResource.js';
     SystemModule
   ],
   providers: [
-    AuditResourceProvider
+    AuditResourceProvider,
+    EmployeeLifecycleInstructions
   ]
 })
 export class AppModule {}
